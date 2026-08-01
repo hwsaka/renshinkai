@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>教本</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:#141a24;
+  --ink-2:#1e2836;
+  --ink-3:#2b3849;
+  --paper:#f3f0e7;
+  --gold:#b8974f;
+  --gold-dim:#8a7038;
+  --text:#e6e3da;
+  --text-dim:#9aa3ae;
+  --shadow:0 24px 60px rgba(0,0,0,.55);
+  --bar-h:64px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{height:100%}
+body{
+  background:
+    radial-gradient(120% 90% at 50% 0%, #212c3b 0%, var(--ink) 62%, #0d1119 100%);
+  color:var(--text);
+  font-family:"Noto Sans JP",system-ui,sans-serif;
+  overflow:hidden;
+  -webkit-text-size-adjust:100%;
+}
+
+/* ---------- 上部バー ---------- */
+header{
+  position:fixed;top:0;left:0;right:0;height:var(--bar-h);
+  display:flex;align-items:center;gap:16px;
+  padding:0 20px;
+  background:linear-gradient(180deg,rgba(13,17,25,.94),rgba(13,17,25,.72) 70%,transparent);
+  z-index:40;
+}
+.brand{
+  font-family:"Noto Serif JP",serif;
+  font-size:17px;letter-spacing:.22em;
+  color:var(--paper);white-space:nowrap;
+}
+.brand small{
+  display:block;font-family:"Noto Sans JP",sans-serif;
+  font-size:10px;letter-spacing:.3em;color:var(--gold);margin-top:2px;
+}
+header .spacer{flex:1}
+
+.btn{
+  appearance:none;border:1px solid rgba(184,151,79,.35);
+  background:rgba(255,255,255,.03);
+  color:var(--text);
+  font:inherit;font-size:13px;
+  padding:8px 14px;border-radius:2px;
+  cursor:pointer;white-space:nowrap;
+  transition:border-color .18s,background .18s,color .18s;
+}
+.btn:hover{border-color:var(--gold);color:#fff;background:rgba(184,151,79,.12)}
+.btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.btn[aria-pressed="true"]{background:rgba(184,151,79,.18);border-color:var(--gold)}
+
+/* ---------- 本体 ---------- */
+#stage{
+  position:absolute;inset:var(--bar-h) 0 84px 0;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+#zoomWrap{
+  transition:transform .25s cubic-bezier(.2,.7,.3,1);
+  transform-origin:center center;
+  will-change:transform;
+}
+#flipbook{box-shadow:var(--shadow)}
+#flipbook .page{background:var(--paper)}
+#flipbook img{display:block;width:100%;height:100%}
+
+/* 本の中央の溝 */
+#stage::after{
+  content:"";position:absolute;pointer-events:none;
+}
+
+/* ---------- 下部バー ---------- */
+footer{
+  position:fixed;left:0;right:0;bottom:0;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:14px 20px;
+  background:linear-gradient(0deg,rgba(13,17,25,.94),rgba(13,17,25,.6) 70%,transparent);
+  z-index:40;
+}
+.nav{
+  width:40px;height:40px;display:grid;place-items:center;
+  border:1px solid rgba(184,151,79,.35);border-radius:50%;
+  background:rgba(255,255,255,.03);color:var(--text);
+  cursor:pointer;font-size:16px;line-height:1;
+  transition:border-color .18s,background .18s;
+}
+.nav:hover{border-color:var(--gold);background:rgba(184,151,79,.12)}
+.nav:disabled{opacity:.28;cursor:default}
+.nav:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.counter{
+  display:flex;align-items:center;gap:6px;
+  font-family:"Noto Serif JP",serif;font-size:14px;
+  color:var(--text-dim);min-width:132px;justify-content:center;
+}
+.counter input{
+  width:56px;padding:6px 4px;text-align:center;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(184,151,79,.3);border-radius:2px;
+  color:var(--paper);font:inherit;
+}
+.counter input:focus{outline:none;border-color:var(--gold)}
+
+.zoomctl{display:flex;align-items:center;gap:6px;margin-left:8px}
+.zoomctl .lvl{font-size:12px;color:var(--text-dim);min-width:44px;text-align:center;font-variant-numeric:tabular-nums}
+
+/* ---------- 目次パネル ---------- */
+#toc{
+  position:fixed;top:0;bottom:0;left:0;width:320px;max-width:86vw;
+  background:#10151d;border-right:1px solid rgba(184,151,79,.22);
+  transform:translateX(-101%);transition:transform .32s cubic-bezier(.3,.8,.3,1);
+  z-index:60;display:flex;flex-direction:column;
+}
+#toc.open{transform:none}
+#toc h2{
+  font-family:"Noto Serif JP",serif;font-size:14px;font-weight:600;
+  letter-spacing:.28em;color:var(--gold);
+  padding:24px 24px 16px;border-bottom:1px solid rgba(255,255,255,.07);
+}
+#tocList{overflow-y:auto;padding:8px 0 24px;flex:1}
+#tocList button{
+  display:flex;width:100%;gap:12px;align-items:baseline;
+  background:none;border:0;border-left:2px solid transparent;
+  color:var(--text);font:inherit;font-size:14px;text-align:left;
+  padding:11px 24px;cursor:pointer;transition:background .15s,border-color .15s;
+}
+#tocList button:hover{background:rgba(184,151,79,.09);border-left-color:var(--gold)}
+#tocList button .p{
+  margin-left:auto;font-size:12px;color:var(--gold-dim);
+  font-variant-numeric:tabular-nums;flex:none;
+}
+#tocClose{position:absolute;top:18px;right:16px;background:none;border:0;color:var(--text-dim);font-size:22px;cursor:pointer;line-height:1}
+#scrim{
+  position:fixed;inset:0;background:rgba(6,9,14,.6);
+  opacity:0;pointer-events:none;transition:opacity .3s;z-index:55;
+}
+#scrim.on{opacity:1;pointer-events:auto}
+
+/* ---------- 読み込み ---------- */
+#loader{
+  position:fixed;inset:0;display:grid;place-content:center;gap:22px;justify-items:center;
+  background:var(--ink);z-index:80;transition:opacity .5s;
+}
+#loader.done{opacity:0;pointer-events:none}
+#loader .t{font-family:"Noto Serif JP",serif;letter-spacing:.3em;font-size:14px;color:var(--paper)}
+#bar{width:260px;height:2px;background:rgba(255,255,255,.12);overflow:hidden}
+#bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
+#pct{font-size:11px;letter-spacing:.2em;color:var(--text-dim);font-variant-numeric:tabular-nums}
+#err{max-width:420px;text-align:center;font-size:13px;line-height:1.9;color:#e2a3a3;display:none;padding:0 24px}
+
+@media (max-width:720px){
+  :root{--bar-h:56px}
+  .brand{font-size:14px;letter-spacing:.14em}
+  .hide-sm{display:none}
+  footer{gap:6px;padding:10px 12px}
+  .counter{min-width:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="btn" id="tocBtn" aria-expanded="false">目次</button>
+  <div class="brand">教本<small>TEXTBOOK</small></div>
+  <div class="spacer"></div>
+  <a class="btn hide-sm" id="dl" href="book.pdf" download>PDFを保存</a>
+</header>
+
+<div id="stage">
+  <div id="zoomWrap"><div id="flipbook"></div></div>
+</div>
+
+<footer>
+  <button class="nav" id="prev" aria-label="前のページ">‹</button>
+  <div class="counter">
+    <input id="pageInput" type="number" min="1" value="1" aria-label="ページ番号">
+    <span id="total">/ –</span>
+  </div>
+  <button class="nav" id="next" aria-label="次のページ">›</button>
+  <div class="zoomctl">
+    <button class="nav" id="zout" aria-label="縮小">−</button>
+    <span class="lvl" id="zlvl">100%</span>
+    <button class="nav" id="zin" aria-label="拡大">＋</button>
+  </div>
+</footer>
+
+<div id="scrim"></div>
+<nav id="toc" aria-label="目次">
+  <h2>目次</h2>
+  <button id="tocClose" aria-label="閉じる">×</button>
+  <div id="tocList"></div>
+</nav>
+
+<div id="loader">
+  <div class="t">読み込み中</div>
+  <div id="bar"><i></i></div>
+  <div id="pct">0%</div>
+  <div id="err"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+<script>
+/* =========================================================
+   設定：ここだけ書き換えれば運用できます
+   ========================================================= */
+const CONFIG = {
+  PDF_URL: 'book.pdf',   // 統合済みPDFのファイル名
+  TITLE:   '合気道技術教本', // 上部に出るタイトル
+  RENDER_SCALE: 1.5,     // 描画解像度（重い場合は 1.2 に下げる）
+  // 目次：{ label:'章タイトル', page: PDFの通し番号 }
+  // ※ page はこの book.pdf 内の通し番号（1始まり）＝原本のノンブルと一致
+  TOC: [
+    { label:'本書の使い方',        page:2  },
+    { label:'合気道は〜',          page:4  },
+    { label:'技法解説',            page:5  },
+    { label:'基本姿勢・基本動作',   page:6  },
+    { label:'四方投げ',            page:30 },
+    { label:'一ヶ条抑え',          page:36 },
+    { label:'二ヶ条抑え',          page:42 },
+    { label:'三ヶ条抑え',          page:48 },
+    { label:'四ヶ条抑え',          page:54 },
+    { label:'肘締め',              page:60 },
+    { label:'側面入り身投げ',      page:66 },
+    { label:'正面入り身投げ',      page:72 },
+    { label:'天地投げ',            page:78 },
+    { label:'小手返し',            page:84 },
+    { label:'呼吸法',              page:90 },
+    { label:'英訳付録',            page:96 },
+  ]
+};
+/* ========================================================= */
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const $ = s => document.querySelector(s);
+const loader = $('#loader'), bar = $('#bar i'), pct = $('#pct'), errBox = $('#err');
+document.title = CONFIG.TITLE;
+document.querySelector('.brand').firstChild.textContent = CONFIG.TITLE;
+$('#dl').href = CONFIG.PDF_URL;
+
+let flip = null, pageCount = 0, zoom = 1, baseW = 0, baseH = 0;
+
+function fail(msg){
+  errBox.style.display = 'block';
+  errBox.innerHTML = msg;
+  bar.parentElement.style.display = 'none';
+  pct.style.display = 'none';
+}
+
+async function boot(){
+  let pdf;
+  try{
+    pdf = await pdfjsLib.getDocument(CONFIG.PDF_URL).promise;
+  }catch(e){
+    fail('PDFを読み込めませんでした。<br>' +
+         '<code>' + CONFIG.PDF_URL + '</code> がこのHTMLと同じ場所にあるか確認してください。');
+    return;
+  }
+
+  pageCount = pdf.numPages;
+  $('#total').textContent = '/ ' + pageCount;
+  $('#pageInput').max = pageCount;
+
+  // 1ページ目のサイズから見開きの基準寸法を決める
+  const first = await pdf.getPage(1);
+  const vp0 = first.getViewport({scale:1});
+  const ratio = vp0.height / vp0.width;
+
+  const stage = $('#stage');
+  const portrait = window.innerWidth < 900;
+  const availH = stage.clientHeight - 24;
+  const availW = stage.clientWidth - 24;
+  baseH = Math.min(availH, (portrait ? availW : availW/2) * ratio);
+  baseW = baseH / ratio;
+
+  // 全ページを画像化
+  const images = [];
+  for(let i=1;i<=pageCount;i++){
+    const page = await pdf.getPage(i);
+    const vp = page.getViewport({scale: CONFIG.RENDER_SCALE});
+    const cv = document.createElement('canvas');
+    cv.width = vp.width; cv.height = vp.height;
+    await page.render({canvasContext: cv.getContext('2d'), viewport: vp}).promise;
+    images.push(cv.toDataURL('image/jpeg', 0.86));
+    const p = Math.round(i/pageCount*100);
+    bar.style.width = p + '%'; pct.textContent = p + '%';
+  }
+
+  flip = new St.PageFlip($('#flipbook'), {
+    width: Math.round(baseW),
+    height: Math.round(baseH),
+    size: 'fixed',
+    showCover: true,
+    usePortrait: portrait,
+    maxShadowOpacity: 0.5,
+    mobileScrollSupport: false,
+    flippingTime: 700
+  });
+  flip.loadFromImages(images);
+
+  flip.on('flip', e => {
+    $('#pageInput').value = e.data + 1;
+    syncNav();
+  });
+
+  buildTOC();
+  syncNav();
+  loader.classList.add('done');
+}
+
+function syncNav(){
+  const i = flip ? flip.getCurrentPageIndex() : 0;
+  $('#prev').disabled = i <= 0;
+  $('#next').disabled = i >= pageCount - 1;
+}
+
+function goto(n){
+  const idx = Math.max(0, Math.min(pageCount-1, n-1));
+  flip.flip(idx);
+  $('#pageInput').value = idx + 1;
+}
+
+/* ---- 目次 ---- */
+function buildTOC(){
+  const list = $('#tocList');
+  if(!CONFIG.TOC.length){
+    list.innerHTML = '<p style="padding:16px 24px;font-size:13px;line-height:2;color:#9aa3ae">' +
+      '目次は <code>CONFIG.TOC</code> に章タイトルとページ番号を書くと表示されます。</p>';
+    return;
+  }
+  CONFIG.TOC.forEach(item => {
+    const b = document.createElement('button');
+    b.innerHTML = '<span>' + item.label + '</span><span class="p">' + item.page + '</span>';
+    b.onclick = () => { goto(item.page); closeTOC(); };
+    list.appendChild(b);
+  });
+}
+function openTOC(){ $('#toc').classList.add('open'); $('#scrim').classList.add('on'); $('#tocBtn').setAttribute('aria-expanded','true'); }
+function closeTOC(){ $('#toc').classList.remove('open'); $('#scrim').classList.remove('on'); $('#tocBtn').setAttribute('aria-expanded','false'); }
+
+/* ---- 拡大縮小 ---- */
+function setZoom(z){
+  zoom = Math.max(0.6, Math.min(2.6, +z.toFixed(2)));
+  $('#zoomWrap').style.transform = 'scale(' + zoom + ')';
+  $('#zlvl').textContent = Math.round(zoom*100) + '%';
+  $('#stage').style.overflow = zoom > 1 ? 'auto' : 'hidden';
+}
+
+/* ---- 操作 ---- */
+$('#prev').onclick = () => flip && flip.flipPrev();
+$('#next').onclick = () => flip && flip.flipNext();
+$('#zin').onclick  = () => setZoom(zoom + 0.2);
+$('#zout').onclick = () => setZoom(zoom - 0.2);
+$('#tocBtn').onclick = openTOC;
+$('#tocClose').onclick = closeTOC;
+$('#scrim').onclick = closeTOC;
+
+$('#pageInput').addEventListener('change', e => goto(parseInt(e.target.value,10) || 1));
+$('#pageInput').addEventListener('keydown', e => { if(e.key === 'Enter') e.target.blur(); });
+
+document.addEventListener('keydown', e => {
+  if(document.activeElement.tagName === 'INPUT') return;
+  if(e.key === 'ArrowLeft')  flip && flip.flipPrev();
+  if(e.key === 'ArrowRight') flip && flip.flipNext();
+  if(e.key === 'Escape')     closeTOC();
+  if(e.key === '+' || e.key === '=') setZoom(zoom + 0.2);
+  if(e.key === '-')                  setZoom(zoom - 0.2);
+});
+
+let rt;
+window.addEventListener('resize', () => {
+  clearTimeout(rt);
+  rt = setTimeout(() => location.reload(), 400);
+});
+
+boot();
+</script>
+</body>
+</html>
