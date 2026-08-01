@@ -53,6 +53,13 @@ header{
   display:block;font-family:"Noto Sans JP",sans-serif;
   font-size:10px;letter-spacing:.3em;color:var(--gold);margin-top:2px;
 }
+.notice{
+  font-family:"Noto Sans JP",sans-serif;
+  font-size:10px;letter-spacing:.12em;
+  color:#e2a3a3;
+  margin-top:3px;
+  white-space:nowrap;
+}
 header .spacer{flex:1}
 
 .btn{
@@ -183,7 +190,9 @@ footer{
 
 <header>
   <button class="btn" id="tocBtn" aria-expanded="false">目次</button>
-  <div class="brand">教本<small>TEXTBOOK</small></div>
+  <div class="brand">教本<small>TEXTBOOK</small>
+    <div class="notice">非公開・個人利用に限定する</div>
+  </div>
   <div class="spacer"></div>
   <a class="btn hide-sm" id="dl" href="book.pdf" download>PDFを保存</a>
 </header>
