@@ -164,9 +164,15 @@ footer{
 @media (max-width:720px){
   :root{--bar-h:56px;--foot-h:72px}
   .brand{font-size:14px;letter-spacing:.14em}
-  .hide-sm{display:none}
+  header{gap:10px;padding:0 12px}
+  #dl{padding:7px 10px;font-size:12px}   /* 縦向き（狭い画面）でもPDF保存ボタンを表示し、少し小さくして収める */
   footer{gap:6px;padding:10px 12px}
   .counter{min-width:auto}
+}
+/* 画面が特に狭いときは注意書きを隠してヘッダーの詰まりを防ぐ */
+@media (max-width:430px){
+  .brand small{display:none}
+  .notice{font-size:9px;letter-spacing:.06em}
 }
 /* 横向きで画面が低いとき（スマホ横など）はバーを薄くして本の表示領域を最大化 */
 @media (orientation:landscape) and (max-height:600px){
