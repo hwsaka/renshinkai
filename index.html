@@ -20,6 +20,7 @@
   --text-dim:#9aa3ae;
   --shadow:0 24px 60px rgba(0,0,0,.55);
   --bar-h:64px;
+  --foot-h:84px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -70,7 +71,7 @@ header .spacer{flex:1}
 .btn[aria-pressed="true"]{background:rgba(184,151,79,.18);border-color:var(--gold)}
 /* ---------- 本体 ---------- */
 #stage{
-  position:absolute;inset:var(--bar-h) 0 84px 0;
+  position:absolute;inset:var(--bar-h) 0 var(--foot-h) 0;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
@@ -161,11 +162,24 @@ footer{
 #pct{font-size:11px;letter-spacing:.2em;color:var(--text-dim);font-variant-numeric:tabular-nums}
 #err{max-width:420px;text-align:center;font-size:13px;line-height:1.9;color:#e2a3a3;display:none;padding:0 24px}
 @media (max-width:720px){
-  :root{--bar-h:56px}
+  :root{--bar-h:56px;--foot-h:72px}
   .brand{font-size:14px;letter-spacing:.14em}
   .hide-sm{display:none}
   footer{gap:6px;padding:10px 12px}
   .counter{min-width:auto}
+}
+/* 横向きで画面が低いとき（スマホ横など）はバーを薄くして本の表示領域を最大化 */
+@media (orientation:landscape) and (max-height:600px){
+  :root{--bar-h:42px;--foot-h:46px}
+  .brand{font-size:12px;letter-spacing:.1em;line-height:1.15}
+  .brand small{display:none}
+  .notice{display:none}
+  header{gap:10px;padding:0 12px}
+  footer{gap:6px;padding:6px 12px}
+  .nav{width:34px;height:34px;font-size:14px}
+  .counter{font-size:13px}
+  .counter input{width:46px;padding:4px 2px}
+  .zoomctl .lvl{min-width:38px}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition-duration:.01ms !important}
@@ -313,8 +327,8 @@ function build(){
   if(!images.length) return;
   const stage = $('#stage');
   const portrait = isPortrait();
-  const availH = stage.clientHeight - 24;
-  const availW = stage.clientWidth - 24;
+  const availH = stage.clientHeight - 10;
+  const availW = stage.clientWidth - 10;
   // 縦向き=1ページ分の幅 / 横向き=見開きなので半分の幅を1ページに割り当てる
   baseH = Math.min(availH, (portrait ? availW : availW/2) * pdfRatio);
   baseW = baseH / pdfRatio;
