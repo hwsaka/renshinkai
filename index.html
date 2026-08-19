@@ -237,6 +237,34 @@ footer{
 .jm-save{background:rgba(184,151,79,.22);border-color:var(--gold);color:#fff}
 .jm-save:hover{background:rgba(184,151,79,.34);color:#fff}
 .jm-hint{font-size:11px;color:var(--text-dim);line-height:1.75;margin-top:14px}
+/* ---------- この教本の使い方（アプリ内ガイド） ---------- */
+#tocList .toc-special{border-left-color:var(--gold);background:rgba(184,151,79,.10);color:#f0e6cf;font-weight:500}
+#tocList .toc-special:hover{background:rgba(184,151,79,.18)}
+#tocList .toc-special .badge{margin-left:auto;font-size:16px;line-height:1;color:var(--gold)}
+#guideModal{position:fixed;inset:0;z-index:95;display:none;background:rgba(6,9,14,.75)}
+#guideModal.open{display:block}
+.gd-scroll{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.gd-card{max-width:640px;margin:0 auto;min-height:100%;background:#141b25;border-left:1px solid rgba(184,151,79,.2);border-right:1px solid rgba(184,151,79,.2)}
+.gd-head{position:sticky;top:0;background:linear-gradient(180deg,#10151d,#141b25);border-bottom:1px solid rgba(184,151,79,.25);padding:16px 20px;display:flex;align-items:center;gap:12px;z-index:2}
+.gd-head h2{font-family:"Noto Serif JP",serif;font-size:16px;letter-spacing:.08em;color:var(--gold);flex:1}
+.gd-close{width:36px;height:36px;border-radius:50%;border:1px solid rgba(184,151,79,.4);background:rgba(255,255,255,.04);color:var(--text);font-size:18px;cursor:pointer;flex:none;line-height:1}
+.gd-close:hover{border-color:var(--gold);color:#fff}
+.gd-body{padding:6px 22px 46px}
+.gd-body section{padding:18px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.gd-body section:last-child{border-bottom:0}
+.gd-body h3{font-family:"Noto Serif JP",serif;font-size:15px;color:var(--paper);display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.gd-body h3 .n{flex:none;width:24px;height:24px;border-radius:50%;background:var(--gold);color:#141b25;font-size:12px;font-weight:700;display:grid;place-items:center;font-family:"Noto Sans JP",sans-serif}
+.gd-body p{font-size:14px;color:var(--text);line-height:1.85;margin:4px 0}
+.gd-body ul,.gd-body ol{list-style:none;margin:6px 0 0}
+.gd-body li{position:relative;padding-left:16px;margin:6px 0;font-size:13.5px;color:#d6d2c7;line-height:1.8}
+.gd-body li::before{content:"";position:absolute;left:2px;top:11px;width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.gd-body ol.steps{counter-reset:s}
+.gd-body ol.steps li{padding-left:30px}
+.gd-body ol.steps li::before{counter-increment:s;content:counter(s);top:1px;left:0;width:20px;height:20px;border-radius:50%;background:rgba(184,151,79,.25);border:1px solid var(--gold);color:#f3ecd8;font-size:11px;font-weight:700;display:grid;place-items:center}
+.gd-key{display:inline-block;border:1px solid rgba(184,151,79,.4);background:rgba(255,255,255,.05);border-radius:5px;padding:0 7px;font-size:12.5px;font-weight:700;color:var(--paper)}
+.gd-tag{display:inline-block;background:rgba(184,151,79,.2);color:#e7d4a3;border-radius:4px;padding:0 7px;font-size:12.5px;font-weight:700}
+.gd-note{background:rgba(184,151,79,.1);border:1px solid rgba(184,151,79,.28);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#cbb98f;margin-top:10px;line-height:1.8}
+.gd-body b{color:var(--paper)}
 </style>
 </head>
 <body>
@@ -291,6 +319,69 @@ footer{
       <button class="btn jm-save" id="jmSave">カレンダーに保存</button>
     </div>
     <p class="jm-hint">「カレンダーに保存」を押すと Google カレンダーの登録画面が開きます。内容を確認して「保存」してください（日時・場所は後から編集できます）。</p>
+  </div>
+</div>
+<div id="guideModal" role="dialog" aria-modal="true" aria-labelledby="gdTitle">
+  <div class="gd-scroll">
+    <div class="gd-card">
+      <div class="gd-head">
+        <h2 id="gdTitle">この教本の使い方</h2>
+        <button class="gd-close" id="gdClose" aria-label="閉じる">×</button>
+      </div>
+      <div class="gd-body">
+        <section>
+          <h3><span class="n">1</span>これは何ですか</h3>
+          <p>スマホ・タブレット・パソコンで、合気道技術教本を本のようにめくって読めるアプリです。稽古の記録（稽古日誌）を Google カレンダーに残す機能も付いています。</p>
+        </section>
+        <section>
+          <h3><span class="n">2</span>アプリとして入れる（おすすめ）</h3>
+          <p>ホーム画面に追加すると、アイコンから全画面で開けて、電波がなくてもオフラインで読めます。</p>
+          <ul>
+            <li><b>iPhone / iPad：</b>Safari で開き、共有ボタン <span class="gd-key">□↑</span> →「ホーム画面に追加」</li>
+            <li><b>Android：</b>Chrome で開き、メニュー <span class="gd-key">⋮</span> →「アプリをインストール」または「ホーム画面に追加」</li>
+          </ul>
+          <div class="gd-note">iPhone は仕組み上、Safari からのみ追加できます。追加せずブラウザのまま使うこともできます。</div>
+        </section>
+        <section>
+          <h3><span class="n">3</span>ページのめくり方</h3>
+          <ul>
+            <li><b>横向き</b>にすると<b>見開き（2ページ）</b>、<b>縦向き</b>にすると<b>1ページ</b>で表示されます</li>
+            <li>ページの端を<b>指でめくる</b>、または画面下の <span class="gd-key">‹</span> <span class="gd-key">›</span> で前後に移動</li>
+            <li>パソコンでは <span class="gd-key">←</span> <span class="gd-key">→</span> キーでもめくれます</li>
+          </ul>
+        </section>
+        <section>
+          <h3><span class="n">4</span>目的のページへ飛ぶ</h3>
+          <ul>
+            <li>左上の <span class="gd-tag">目次</span> を押すと章の一覧が出ます。技名を選ぶとそのページへ移動します</li>
+            <li>画面下中央の数字の欄にページ番号を入れて移動することもできます</li>
+          </ul>
+        </section>
+        <section>
+          <h3><span class="n">5</span>拡大・PDF保存</h3>
+          <ul>
+            <li>画面下の <span class="gd-key">＋</span> <span class="gd-key">−</span> で拡大・縮小できます</li>
+            <li>右上の <span class="gd-tag">PDFを保存</span> から教本の PDF をダウンロードできます</li>
+          </ul>
+        </section>
+        <section>
+          <h3><span class="n">6</span>稽古日誌をつける</h3>
+          <p>稽古した技のページを開いた状態で、記録を残せます。</p>
+          <ol class="steps">
+            <li>画面右下の <span class="gd-key">✎</span> ボタンを押します</li>
+            <li>日付（今日）と技名（開いているページから自動で入ります）を確認します</li>
+            <li>道場・場所と、先生の指導・気づき・重要だと感じたことを書きます</li>
+            <li><span class="gd-tag">カレンダーに保存</span> を押すと Google カレンダーの登録画面が開きます</li>
+            <li>内容を確認して「保存」すると、「合気道稽古（技名）」として記録されます</li>
+          </ol>
+          <div class="gd-note">記録は Google カレンダーに残ります。あとでカレンダーを見れば、いつどの技を稽古し、何を教わったか振り返れます。</div>
+        </section>
+        <section>
+          <h3><span class="n">7</span>オフラインでも使えます</h3>
+          <p>一度ひらいて読み込んでおけば、次からは電波がない道場でも教本を閲覧できます。稽古日誌の入力もできます（カレンダーへの保存だけは通信が必要です）。</p>
+        </section>
+      </div>
+    </div>
   </div>
 </div>
 <div id="loader">
@@ -464,6 +555,12 @@ function goto(n){
 /* ---- 目次 ---- */
 function buildTOC(){
   const list = $('#tocList');
+  // 目次の先頭に「この教本の使い方」を追加（アプリ内ガイドを開く）
+  const guideItem = document.createElement('button');
+  guideItem.className = 'toc-special';
+  guideItem.innerHTML = '<span>この教本の使い方</span><span class="badge">?</span>';
+  guideItem.onclick = () => { closeTOC(); openGuide(); };
+  list.appendChild(guideItem);
   if(!CONFIG.TOC.length){
     list.innerHTML = '<p style="padding:16px 24px;font-size:13px;line-height:2;color:#9aa3ae">' +
       '目次は <code>CONFIG.TOC</code> に章タイトルとページ番号を書くと表示されます。</p>';
@@ -476,6 +573,8 @@ function buildTOC(){
     list.appendChild(b);
   });
 }
+function openGuide(){ const m=$('#guideModal'); m.classList.add('open'); m.querySelector('.gd-scroll').scrollTop=0; }
+function closeGuide(){ $('#guideModal').classList.remove('open'); }
 function openTOC(){ $('#toc').classList.add('open'); $('#scrim').classList.add('on'); $('#tocBtn').setAttribute('aria-expanded','true'); }
 function closeTOC(){ $('#toc').classList.remove('open'); $('#scrim').classList.remove('on'); $('#tocBtn').setAttribute('aria-expanded','false'); }
 /* ---- 拡大縮小 ---- */
@@ -493,9 +592,15 @@ $('#zout').onclick = () => setZoom(zoom - 0.2);
 $('#tocBtn').onclick = openTOC;
 $('#tocClose').onclick = closeTOC;
 $('#scrim').onclick = closeTOC;
+$('#gdClose').onclick = closeGuide;
 $('#pageInput').addEventListener('change', e => goto(parseInt(e.target.value,10) || 1));
 $('#pageInput').addEventListener('keydown', e => { if(e.key === 'Enter') e.target.blur(); });
 document.addEventListener('keydown', e => {
+  // 使い方ガイドが開いているときは Esc で閉じるだけ
+  if($('#guideModal').classList.contains('open')){
+    if(e.key === 'Escape') closeGuide();
+    return;
+  }
   // 稽古日誌が開いているときはページ送り等を無効化し、Escで閉じるだけにする
   if($('#journalModal').classList.contains('open')){
     if(e.key === 'Escape') closeJournal();
