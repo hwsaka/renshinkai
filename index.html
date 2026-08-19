@@ -3,8 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>教本</title>
+<!-- PWA（ホーム画面に追加してアプリのように使う） -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#141a24">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="教本">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
@@ -71,7 +78,8 @@ header .spacer{flex:1}
 .btn[aria-pressed="true"]{background:rgba(184,151,79,.18);border-color:var(--gold)}
 /* ---------- 本体 ---------- */
 #stage{
-  position:absolute;inset:var(--bar-h) 0 var(--foot-h) 0;
+  position:absolute;
+  inset:var(--bar-h) 0 calc(var(--foot-h) + env(safe-area-inset-bottom)) 0;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
@@ -92,6 +100,7 @@ footer{
   position:fixed;left:0;right:0;bottom:0;
   display:flex;align-items:center;justify-content:center;gap:10px;
   padding:14px 20px;
+  padding-bottom:calc(14px + env(safe-area-inset-bottom));
   background:linear-gradient(0deg,rgba(13,17,25,.94),rgba(13,17,25,.6) 70%,transparent);
   z-index:40;
 }
@@ -192,7 +201,7 @@ footer{
 }
 /* ---------- 稽古日誌 ---------- */
 #journalFab{
-  position:fixed;right:16px;bottom:calc(var(--foot-h) + 14px);
+  position:fixed;right:16px;bottom:calc(var(--foot-h) + 14px + env(safe-area-inset-bottom));
   width:54px;height:54px;border-radius:50%;
   border:1px solid rgba(184,151,79,.55);
   background:rgba(184,151,79,.20);color:#f3ecd8;
@@ -592,6 +601,13 @@ $('#journalModal').addEventListener('click', e => {
 });
 
 boot();
+
+/* ---- PWA: Service Worker 登録（オフライン対応・ホーム画面追加） ---- */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
