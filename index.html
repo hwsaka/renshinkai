@@ -5,11 +5,9 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>教本</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
-
 <style>
 :root{
   --ink:#141a24;
@@ -23,9 +21,7 @@
   --shadow:0 24px 60px rgba(0,0,0,.55);
   --bar-h:64px;
 }
-
 *{box-sizing:border-box;margin:0;padding:0}
-
 html,body{height:100%}
 body{
   background:
@@ -35,7 +31,6 @@ body{
   overflow:hidden;
   -webkit-text-size-adjust:100%;
 }
-
 /* ---------- 上部バー ---------- */
 header{
   position:fixed;top:0;left:0;right:0;height:var(--bar-h);
@@ -61,7 +56,6 @@ header{
   white-space:nowrap;
 }
 header .spacer{flex:1}
-
 .btn{
   appearance:none;border:1px solid rgba(184,151,79,.35);
   background:rgba(255,255,255,.03);
@@ -74,7 +68,6 @@ header .spacer{flex:1}
 .btn:hover{border-color:var(--gold);color:#fff;background:rgba(184,151,79,.12)}
 .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .btn[aria-pressed="true"]{background:rgba(184,151,79,.18);border-color:var(--gold)}
-
 /* ---------- 本体 ---------- */
 #stage{
   position:absolute;inset:var(--bar-h) 0 84px 0;
@@ -89,12 +82,10 @@ header .spacer{flex:1}
 #flipbook{box-shadow:var(--shadow)}
 #flipbook .page{background:var(--paper)}
 #flipbook img{display:block;width:100%;height:100%}
-
 /* 本の中央の溝 */
 #stage::after{
   content:"";position:absolute;pointer-events:none;
 }
-
 /* ---------- 下部バー ---------- */
 footer{
   position:fixed;left:0;right:0;bottom:0;
@@ -113,7 +104,6 @@ footer{
 .nav:hover{border-color:var(--gold);background:rgba(184,151,79,.12)}
 .nav:disabled{opacity:.28;cursor:default}
 .nav:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-
 .counter{
   display:flex;align-items:center;gap:6px;
   font-family:"Noto Serif JP",serif;font-size:14px;
@@ -126,10 +116,8 @@ footer{
   color:var(--paper);font:inherit;
 }
 .counter input:focus{outline:none;border-color:var(--gold)}
-
 .zoomctl{display:flex;align-items:center;gap:6px;margin-left:8px}
 .zoomctl .lvl{font-size:12px;color:var(--text-dim);min-width:44px;text-align:center;font-variant-numeric:tabular-nums}
-
 /* ---------- 目次パネル ---------- */
 #toc{
   position:fixed;top:0;bottom:0;left:0;width:320px;max-width:86vw;
@@ -161,7 +149,6 @@ footer{
   opacity:0;pointer-events:none;transition:opacity .3s;z-index:55;
 }
 #scrim.on{opacity:1;pointer-events:auto}
-
 /* ---------- 読み込み ---------- */
 #loader{
   position:fixed;inset:0;display:grid;place-content:center;gap:22px;justify-items:center;
@@ -173,7 +160,6 @@ footer{
 #bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
 #pct{font-size:11px;letter-spacing:.2em;color:var(--text-dim);font-variant-numeric:tabular-nums}
 #err{max-width:420px;text-align:center;font-size:13px;line-height:1.9;color:#e2a3a3;display:none;padding:0 24px}
-
 @media (max-width:720px){
   :root{--bar-h:56px}
   .brand{font-size:14px;letter-spacing:.14em}
@@ -187,7 +173,6 @@ footer{
 </style>
 </head>
 <body>
-
 <header>
   <button class="btn" id="tocBtn" aria-expanded="false">目次</button>
   <div class="brand">教本<small>TEXTBOOK</small>
@@ -196,11 +181,9 @@ footer{
   <div class="spacer"></div>
   <a class="btn hide-sm" id="dl" href="book.pdf" download>PDFを保存</a>
 </header>
-
 <div id="stage">
   <div id="zoomWrap"><div id="flipbook"></div></div>
 </div>
-
 <footer>
   <button class="nav" id="prev" aria-label="前のページ">‹</button>
   <div class="counter">
@@ -214,21 +197,18 @@ footer{
     <button class="nav" id="zin" aria-label="拡大">＋</button>
   </div>
 </footer>
-
 <div id="scrim"></div>
 <nav id="toc" aria-label="目次">
   <h2>目次</h2>
   <button id="tocClose" aria-label="閉じる">×</button>
   <div id="tocList"></div>
 </nav>
-
 <div id="loader">
   <div class="t">読み込み中</div>
   <div id="bar"><i></i></div>
   <div id="pct">0%</div>
   <div id="err"></div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 <script>
@@ -261,10 +241,8 @@ const CONFIG = {
   ]
 };
 /* ========================================================= */
-
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
 const $ = s => document.querySelector(s);
 const loader = $('#loader'), bar = $('#bar i'), pct = $('#pct'), errBox = $('#err');
 document.title = CONFIG.TITLE;
@@ -272,12 +250,24 @@ document.querySelector('.brand').firstChild.textContent = CONFIG.TITLE;
 $('#dl').href = CONFIG.PDF_URL;
 
 let flip = null, pageCount = 0, zoom = 1, baseW = 0, baseH = 0;
+let images = [], pdfRatio = 1;          // 描画済み画像は一度だけ生成してキャッシュ
+let curOrientation = null, lastW = 0, lastH = 0;
 
 function fail(msg){
   errBox.style.display = 'block';
   errBox.innerHTML = msg;
   bar.parentElement.style.display = 'none';
   pct.style.display = 'none';
+}
+
+/* 画面の「向き」を判定：縦向き=true（単ページ） / 横向き=false（見開き）
+   ・matchMedia の orientation を第一基準にし、非対応環境では縦横比でフォールバック */
+function isPortrait(){
+  if(window.matchMedia){
+    const mq = window.matchMedia('(orientation: portrait)');
+    if(typeof mq.matches === 'boolean') return mq.matches;
+  }
+  return window.innerHeight >= window.innerWidth;
 }
 
 async function boot(){
@@ -289,25 +279,17 @@ async function boot(){
          '<code>' + CONFIG.PDF_URL + '</code> がこのHTMLと同じ場所にあるか確認してください。');
     return;
   }
-
   pageCount = pdf.numPages;
   $('#total').textContent = '/ ' + pageCount;
   $('#pageInput').max = pageCount;
 
-  // 1ページ目のサイズから見開きの基準寸法を決める
+  // 1ページ目のサイズから基準比率を取得
   const first = await pdf.getPage(1);
   const vp0 = first.getViewport({scale:1});
-  const ratio = vp0.height / vp0.width;
+  pdfRatio = vp0.height / vp0.width;
 
-  const stage = $('#stage');
-  const portrait = window.innerWidth < 900;
-  const availH = stage.clientHeight - 24;
-  const availW = stage.clientWidth - 24;
-  baseH = Math.min(availH, (portrait ? availW : availW/2) * ratio);
-  baseW = baseH / ratio;
-
-  // 全ページを画像化
-  const images = [];
+  // 全ページを画像化（重い処理なので起動時に一度だけ実行してキャッシュ）
+  images = [];
   for(let i=1;i<=pageCount;i++){
     const page = await pdf.getPage(i);
     const vp = page.getViewport({scale: CONFIG.RENDER_SCALE});
@@ -319,26 +301,55 @@ async function boot(){
     bar.style.width = p + '%'; pct.textContent = p + '%';
   }
 
+  build();          // 現在の向きに合わせてフリップブックを構築
+  buildTOC();
+  syncNav();
+  loader.classList.add('done');
+}
+
+/* 向きに応じてフリップブックを（再）構築する。
+   回転・リサイズ時は現在ページを保ったまま作り直す（画像は再生成しない＝速い） */
+function build(){
+  if(!images.length) return;
+  const stage = $('#stage');
+  const portrait = isPortrait();
+  const availH = stage.clientHeight - 24;
+  const availW = stage.clientWidth - 24;
+  // 縦向き=1ページ分の幅 / 横向き=見開きなので半分の幅を1ページに割り当てる
+  baseH = Math.min(availH, (portrait ? availW : availW/2) * pdfRatio);
+  baseW = baseH / pdfRatio;
+
+  const keep = flip ? flip.getCurrentPageIndex() : 0;
+  if(flip){ try{ flip.destroy(); }catch(e){} flip = null; }
+  $('#flipbook').innerHTML = '';
+
   flip = new St.PageFlip($('#flipbook'), {
     width: Math.round(baseW),
     height: Math.round(baseH),
     size: 'fixed',
     showCover: true,
-    usePortrait: portrait,
+    usePortrait: portrait,   // 縦向き=単ページ / 横向き=見開き
     maxShadowOpacity: 0.5,
     mobileScrollSupport: false,
     flippingTime: 700
   });
   flip.loadFromImages(images);
-
   flip.on('flip', e => {
     $('#pageInput').value = e.data + 1;
     syncNav();
   });
 
-  buildTOC();
+  // 直前のページ位置を復元
+  if(keep > 0){
+    try{ flip.turnToPage(keep); }catch(e){}
+  }
+  const cur = (typeof flip.getCurrentPageIndex === 'function') ? flip.getCurrentPageIndex() : keep;
+  $('#pageInput').value = cur + 1;
+
+  curOrientation = portrait ? 'p' : 'l';
+  lastW = stage.clientWidth;
+  lastH = stage.clientHeight;
   syncNav();
-  loader.classList.add('done');
 }
 
 function syncNav(){
@@ -346,13 +357,11 @@ function syncNav(){
   $('#prev').disabled = i <= 0;
   $('#next').disabled = i >= pageCount - 1;
 }
-
 function goto(n){
   const idx = Math.max(0, Math.min(pageCount-1, n-1));
   flip.flip(idx);
   $('#pageInput').value = idx + 1;
 }
-
 /* ---- 目次 ---- */
 function buildTOC(){
   const list = $('#tocList');
@@ -370,7 +379,6 @@ function buildTOC(){
 }
 function openTOC(){ $('#toc').classList.add('open'); $('#scrim').classList.add('on'); $('#tocBtn').setAttribute('aria-expanded','true'); }
 function closeTOC(){ $('#toc').classList.remove('open'); $('#scrim').classList.remove('on'); $('#tocBtn').setAttribute('aria-expanded','false'); }
-
 /* ---- 拡大縮小 ---- */
 function setZoom(z){
   zoom = Math.max(0.6, Math.min(2.6, +z.toFixed(2)));
@@ -378,7 +386,6 @@ function setZoom(z){
   $('#zlvl').textContent = Math.round(zoom*100) + '%';
   $('#stage').style.overflow = zoom > 1 ? 'auto' : 'hidden';
 }
-
 /* ---- 操作 ---- */
 $('#prev').onclick = () => flip && flip.flipPrev();
 $('#next').onclick = () => flip && flip.flipNext();
@@ -387,10 +394,8 @@ $('#zout').onclick = () => setZoom(zoom - 0.2);
 $('#tocBtn').onclick = openTOC;
 $('#tocClose').onclick = closeTOC;
 $('#scrim').onclick = closeTOC;
-
 $('#pageInput').addEventListener('change', e => goto(parseInt(e.target.value,10) || 1));
 $('#pageInput').addEventListener('keydown', e => { if(e.key === 'Enter') e.target.blur(); });
-
 document.addEventListener('keydown', e => {
   if(document.activeElement.tagName === 'INPUT') return;
   if(e.key === 'ArrowLeft')  flip && flip.flipPrev();
@@ -400,11 +405,31 @@ document.addEventListener('keydown', e => {
   if(e.key === '-')                  setZoom(zoom - 0.2);
 });
 
+/* ---- 回転・リサイズ対応 ----
+   向きが変わったとき、または表示サイズが大きく変わったときだけ組み直す。
+   （モバイルのアドレスバー開閉などの小さな変化では再構築しない） */
+function relayoutIfNeeded(){
+  if(!flip) return;
+  const stage = $('#stage');
+  const orient = isPortrait() ? 'p' : 'l';
+  const dw = Math.abs(stage.clientWidth - lastW);
+  const dh = Math.abs(stage.clientHeight - lastH);
+  if(orient !== curOrientation || dw > 40 || dh > 40){
+    build();
+  }
+}
 let rt;
 window.addEventListener('resize', () => {
   clearTimeout(rt);
-  rt = setTimeout(() => location.reload(), 400);
+  rt = setTimeout(relayoutIfNeeded, 300);
 });
+// orientation の変化は matchMedia でも確実に拾う
+if(window.matchMedia){
+  const omq = window.matchMedia('(orientation: portrait)');
+  const onOrient = () => { clearTimeout(rt); rt = setTimeout(relayoutIfNeeded, 250); };
+  if(omq.addEventListener) omq.addEventListener('change', onOrient);
+  else if(omq.addListener) omq.addListener(onOrient); // 古い端末向けフォールバック
+}
 
 boot();
 </script>
