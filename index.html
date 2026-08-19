@@ -321,9 +321,18 @@ function build(){
 
   const keep = flip ? flip.getCurrentPageIndex() : 0;
   if(flip){ try{ flip.destroy(); }catch(e){} flip = null; }
-  $('#flipbook').innerHTML = '';
+  // ※ page-flip の destroy() は #flipbook 要素自体をDOMから取り除くため、
+  //    毎回 #zoomWrap の中に空の #flipbook を作り直してから生成する
+  let fb = document.getElementById('flipbook');
+  if(!fb){
+    fb = document.createElement('div');
+    fb.id = 'flipbook';
+    $('#zoomWrap').appendChild(fb);
+  }else{
+    fb.innerHTML = '';
+  }
 
-  flip = new St.PageFlip($('#flipbook'), {
+  flip = new St.PageFlip(fb, {
     width: Math.round(baseW),
     height: Math.round(baseH),
     size: 'fixed',
