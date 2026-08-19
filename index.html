@@ -190,6 +190,44 @@ footer{
 @media (prefers-reduced-motion:reduce){
   *{transition-duration:.01ms !important}
 }
+/* ---------- 稽古日誌 ---------- */
+#journalFab{
+  position:fixed;right:16px;bottom:calc(var(--foot-h) + 14px);
+  width:54px;height:54px;border-radius:50%;
+  border:1px solid rgba(184,151,79,.55);
+  background:rgba(184,151,79,.20);color:#f3ecd8;
+  font-size:22px;line-height:1;cursor:pointer;z-index:50;
+  display:grid;place-items:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.45);
+  transition:background .18s,border-color .18s,transform .12s;
+}
+#journalFab:hover{background:rgba(184,151,79,.32);border-color:var(--gold)}
+#journalFab:active{transform:scale(.94)}
+#journalFab:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+#journalModal{
+  position:fixed;inset:0;z-index:90;display:none;
+  align-items:center;justify-content:center;padding:20px;
+  background:rgba(6,9,14,.66);
+}
+#journalModal.open{display:flex}
+.jm-card{
+  width:100%;max-width:440px;max-height:90vh;overflow-y:auto;
+  background:#141b25;border:1px solid rgba(184,151,79,.28);border-radius:6px;
+  padding:22px 22px 18px;box-shadow:var(--shadow);
+}
+.jm-card h2{font-family:"Noto Serif JP",serif;font-size:16px;letter-spacing:.2em;color:var(--gold);margin-bottom:16px}
+.jm-card label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:14px}
+.jm-card input,.jm-card textarea{
+  display:block;width:100%;margin-top:6px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(184,151,79,.3);border-radius:3px;
+  color:var(--paper);font:inherit;font-size:14px;padding:9px 10px;
+}
+.jm-card input:focus,.jm-card textarea:focus{outline:none;border-color:var(--gold)}
+.jm-card textarea{resize:vertical;line-height:1.7;min-height:120px}
+.jm-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:4px}
+.jm-save{background:rgba(184,151,79,.22);border-color:var(--gold);color:#fff}
+.jm-save:hover{background:rgba(184,151,79,.34);color:#fff}
+.jm-hint{font-size:11px;color:var(--text-dim);line-height:1.75;margin-top:14px}
 </style>
 </head>
 <body>
@@ -223,6 +261,29 @@ footer{
   <button id="tocClose" aria-label="閉じる">×</button>
   <div id="tocList"></div>
 </nav>
+<button id="journalFab" aria-label="稽古日誌を書く" title="稽古日誌">✎</button>
+<div id="journalModal" role="dialog" aria-modal="true" aria-labelledby="jmTitle">
+  <div class="jm-card">
+    <h2 id="jmTitle">稽古日誌</h2>
+    <label>日付
+      <input type="date" id="jmDate">
+    </label>
+    <label>技（教本の現在ページから自動入力・編集可）
+      <input type="text" id="jmTech" placeholder="技名">
+    </label>
+    <label>道場・場所
+      <input type="text" id="jmPlace" placeholder="例：〇〇道場">
+    </label>
+    <label>内容（先生の指導・気づき・重要だと感じたこと）
+      <textarea id="jmBody" rows="6" placeholder="先生の指導、気づいたこと、重要だと感じたこと…"></textarea>
+    </label>
+    <div class="jm-actions">
+      <button class="btn" id="jmCancel">キャンセル</button>
+      <button class="btn jm-save" id="jmSave">カレンダーに保存</button>
+    </div>
+    <p class="jm-hint">「カレンダーに保存」を押すと Google カレンダーの登録画面が開きます。内容を確認して「保存」してください（日時・場所は後から編集できます）。</p>
+  </div>
+</div>
 <div id="loader">
   <div class="t">読み込み中</div>
   <div id="bar"><i></i></div>
@@ -426,7 +487,12 @@ $('#scrim').onclick = closeTOC;
 $('#pageInput').addEventListener('change', e => goto(parseInt(e.target.value,10) || 1));
 $('#pageInput').addEventListener('keydown', e => { if(e.key === 'Enter') e.target.blur(); });
 document.addEventListener('keydown', e => {
-  if(document.activeElement.tagName === 'INPUT') return;
+  // 稽古日誌が開いているときはページ送り等を無効化し、Escで閉じるだけにする
+  if($('#journalModal').classList.contains('open')){
+    if(e.key === 'Escape') closeJournal();
+    return;
+  }
+  if(/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
   if(e.key === 'ArrowLeft')  flip && flip.flipPrev();
   if(e.key === 'ArrowRight') flip && flip.flipNext();
   if(e.key === 'Escape')     closeTOC();
@@ -459,6 +525,71 @@ if(window.matchMedia){
   if(omq.addEventListener) omq.addEventListener('change', onOrient);
   else if(omq.addListener) omq.addListener(onOrient); // 古い端末向けフォールバック
 }
+
+/* ---- 稽古日誌 → Google カレンダー（簡易版：登録画面を開く方式） ---- */
+let journalPage = 1;
+// 現在開いているPDFページ番号（1始まり）
+function currentPdfPage(){
+  return (flip ? flip.getCurrentPageIndex() : 0) + 1;
+}
+// そのページに該当する技を目次から判定（page が現在ページ以下で最大のもの）
+function techForPage(p){
+  let best = null;
+  for(const it of CONFIG.TOC){
+    if(it.page <= p && (!best || it.page > best.page)) best = it;
+  }
+  return best; // {label,page} または null
+}
+function openJournal(){
+  journalPage = currentPdfPage();
+  const t = techForPage(journalPage);
+  const now = new Date();
+  const iso = now.getFullYear() + '-' +
+              String(now.getMonth()+1).padStart(2,'0') + '-' +
+              String(now.getDate()).padStart(2,'0');
+  $('#jmDate').value = iso;
+  $('#jmTech').value = t ? t.label : '';
+  $('#jmBody').value = '';
+  // 道場・場所は前回入力を引き継ぐ（未入力ならそのまま空）
+  $('#journalModal').classList.add('open');
+  setTimeout(() => $('#jmBody').focus(), 60);
+}
+function closeJournal(){ $('#journalModal').classList.remove('open'); }
+function saveJournal(){
+  const date = $('#jmDate').value;
+  if(!date){ $('#jmDate').focus(); return; }
+  const tech = $('#jmTech').value.trim();
+  const place = $('#jmPlace').value.trim();
+  const body = $('#jmBody').value.trim();
+
+  // 終日予定：終了日は翌日（Googleは終了日を含めないため）
+  const d1 = date.replace(/-/g,'');
+  const dt = new Date(date + 'T00:00:00');
+  dt.setDate(dt.getDate() + 1);
+  const d2 = dt.getFullYear() +
+             String(dt.getMonth()+1).padStart(2,'0') +
+             String(dt.getDate()).padStart(2,'0');
+
+  const title = tech ? ('合気道稽古（' + tech + '）') : '合気道稽古';
+  const ref = tech ? ('技：' + tech + '（教本 p.' + journalPage + '）')
+                   : ('教本 p.' + journalPage);
+  const details = body ? (body + '\n\n──────\n' + ref) : ref;
+
+  let url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+            '&text='    + encodeURIComponent(title) +
+            '&dates='   + d1 + '/' + d2 +
+            '&details=' + encodeURIComponent(details);
+  if(place) url += '&location=' + encodeURIComponent(place);
+
+  window.open(url, '_blank', 'noopener');
+  closeJournal();
+}
+$('#journalFab').onclick = openJournal;
+$('#jmCancel').onclick   = closeJournal;
+$('#jmSave').onclick     = saveJournal;
+$('#journalModal').addEventListener('click', e => {
+  if(e.target.id === 'journalModal') closeJournal(); // 背景クリックで閉じる
+});
 
 boot();
 </script>
