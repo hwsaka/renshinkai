@@ -494,6 +494,10 @@ async function boot(){
   buildTOC();
   syncNav();
   loader.classList.add('done');
+
+  // 審査科目ページから直接開かれた場合（#p=ページ番号）は該当ページへ
+  const hp = (location.hash || '').match(/p=(\d+)/);
+  if(hp){ goto(parseInt(hp[1], 10)); }
 }
 
 /* 向きに応じてフリップブックを（再）構築する。
@@ -598,8 +602,15 @@ function openShinsa(url){
   wrap.classList.add('open');
 }
 function closeShinsa(){ $('#shinsaWrap').classList.remove('open'); }
-// 審査科目ページ（iframe内）からの「もどる」通知で閉じる
-window.addEventListener('message', e => { if(e && e.data === 'closeShinsa') closeShinsa(); });
+// 審査科目ページ（iframe内）からの通知：もどる／教本の該当ページへジャンプ
+window.addEventListener('message', e => {
+  if(!e || e.data == null) return;
+  if(e.data === 'closeShinsa'){ closeShinsa(); return; }
+  if(e.data.type === 'gotoPage' && typeof e.data.page === 'number'){
+    closeShinsa();
+    goto(e.data.page);
+  }
+});
 /* ---- 拡大縮小 ---- */
 function setZoom(z){
   zoom = Math.max(0.6, Math.min(2.6, +z.toFixed(2)));
