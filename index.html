@@ -269,6 +269,16 @@ footer{
 #shinsaWrap{position:fixed;inset:0;z-index:85;display:none;background:#fff}
 #shinsaWrap.open{display:block}
 #shinsaFrame{border:0;width:100%;height:100%;display:block}
+/* 技法へ飛んだあと審査へ戻るボタン */
+#shinsaReturn{
+  position:fixed;left:16px;bottom:calc(var(--foot-h) + 14px + env(safe-area-inset-bottom));
+  z-index:50;display:none;align-items:center;gap:7px;
+  font-family:"Noto Sans JP",sans-serif;font-size:13px;font-weight:700;
+  color:#141b25;background:var(--gold);border:none;border-radius:999px;
+  padding:11px 16px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.45);
+}
+#shinsaReturn.show{display:inline-flex}
+#shinsaReturn:hover{background:#d3b877}
 </style>
 </head>
 <body>
@@ -396,6 +406,7 @@ footer{
 </div>
 <!-- 審査科目：アプリ内オーバーレイ（別タブにせず教本の上に重ねて表示） -->
 <div id="shinsaWrap"><iframe id="shinsaFrame" title="審査科目" loading="lazy"></iframe></div>
+<button id="shinsaReturn" aria-label="審査科目にもどる">← 審査科目へ</button>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 <script>
@@ -600,15 +611,24 @@ function openShinsa(url){
   const wrap = $('#shinsaWrap'), fr = $('#shinsaFrame');
   if(fr.getAttribute('data-src') !== url){ fr.src = url; fr.setAttribute('data-src', url); }
   wrap.classList.add('open');
+  hideShinsaReturn();
 }
 function closeShinsa(){ $('#shinsaWrap').classList.remove('open'); }
+function showShinsaReturn(){ $('#shinsaReturn').classList.add('show'); }
+function hideShinsaReturn(){ $('#shinsaReturn').classList.remove('show'); }
+// 「審査科目へ」：閉じてある審査オーバーレイを再表示（見ていた位置は保持）
+$('#shinsaReturn').onclick = () => {
+  const url = $('#shinsaFrame').getAttribute('data-src') || 'shinsa.html';
+  openShinsa(url);
+};
 // 審査科目ページ（iframe内）からの通知：もどる／教本の該当ページへジャンプ
 window.addEventListener('message', e => {
   if(!e || e.data == null) return;
-  if(e.data === 'closeShinsa'){ closeShinsa(); return; }
+  if(e.data === 'closeShinsa'){ closeShinsa(); hideShinsaReturn(); return; }   // 「教本にもどる」＝審査終了
   if(e.data.type === 'gotoPage' && typeof e.data.page === 'number'){
     closeShinsa();
     goto(e.data.page);
+    showShinsaReturn();   // 技法へ飛んだので「審査科目へ」ボタンを表示
   }
 });
 /* ---- 拡大縮小 ---- */
