@@ -215,6 +215,15 @@
     vertical-align:middle;letter-spacing:.03em;font-weight:700;
   }
   .rlog:hover{background:var(--gold-2);}
+
+  /* 教本の該当ページへ飛ぶ技名リンク */
+  .tlink{
+    color:var(--gold-2);
+    text-decoration:underline;text-decoration-style:dotted;
+    text-decoration-color:rgba(184,151,79,.55);text-underline-offset:3px;
+    cursor:pointer;
+  }
+  .tlink:hover{color:#efe0b0;text-decoration-color:var(--gold);}
 </style>
 </head>
 <body>
@@ -232,6 +241,7 @@
     <b>本一覧は令和7年度版です。</b> ご提供いただいた正式テキストどおりに転記しています。
     審査科目は将来刷新される場合があります。
   </div>
+  <div class="note">下線のある技名・基本動作をタップすると、教本の該当ページ（その技・動作が載っている節）が開きます。</div>
 
   <nav class="toc" id="top">
     <h2>目 次</h2>
@@ -920,6 +930,68 @@
       // (3) それ以外（直接開いた場合）は通常どおり教本トップへ遷移（href="./"）
     });
   }
+
+  /* ===== 技名 → 教本の該当ページへジャンプ（名称の一部一致） ===== */
+  // 教本の目次カテゴリと開始ページ（特定的な語を先に判定）
+  var TECH_LINKS = [
+    {kw:"四ヶ条", page:54},
+    {kw:"三ヶ条", page:48},
+    {kw:"二ヶ条", page:42},
+    {kw:"一ヶ条", page:36},
+    {kw:"側面入身投げ", page:66},
+    {kw:"正面入身投げ", page:72},
+    {kw:"四方投げ", page:30},
+    {kw:"肘締め", page:60},
+    {kw:"天地投げ", page:78},
+    {kw:"小手返し", page:84},
+    {kw:"呼吸投げ", page:90},
+    {kw:"呼吸法", page:90},
+    {kw:"体の変更（二）", page:20},
+    {kw:"体の変更（一）", page:18},
+    {kw:"体の変更", page:18},
+    {kw:"臂力の養成（二）", page:24},
+    {kw:"臂力の養成（一）", page:22},
+    {kw:"臂力", page:22},
+    {kw:"終末動作（二）", page:28},
+    {kw:"終末動作（一）", page:26},
+    {kw:"終末動作", page:26},
+    {kw:"前方回転受け身", page:15},
+    {kw:"後方回転受け身", page:12},
+    {kw:"膝行", page:11},
+    {kw:"礼法", page:10},
+    {kw:"正座法", page:8},
+    {kw:"構え", page:7},
+    {kw:"基本動作", page:6}
+  ];
+  function pageForTech(name){
+    var n = (name||"").replace(/り/g,"").replace(/\s+/g,"");  // 入り身⇔入身の表記ゆれを吸収
+    for(var i=0;i<TECH_LINKS.length;i++){
+      if(n.indexOf(TECH_LINKS[i].kw.replace(/り/g,"")) >= 0) return TECH_LINKS[i].page;
+    }
+    return null;
+  }
+  function gotoTehonPage(page){
+    if(window.parent && window.parent !== window){
+      // 教本内オーバーレイ表示：親に該当ページへ移動を依頼（審査は閉じる）
+      try{ window.parent.postMessage({type:"gotoPage", page:page}, "*"); }catch(_){}
+    }else{
+      // 直接開いている場合：教本を該当ページ付きで開く
+      location.href = "./#p=" + page;
+    }
+  }
+  document.querySelectorAll("ol.tech > li, ul.plain > li").forEach(function(li){
+    var text = li.textContent.replace(/\s+/g," ").trim();
+    if(text === "指定技" || text === "指定自由技") return;
+    var page = pageForTech(text);
+    if(!page) return;
+    // li の中身を .tlink で包んでクリック可能にする（※等の子要素も保持）
+    var span = document.createElement("span");
+    span.className = "tlink";
+    span.title = "教本の該当ページを開く";
+    while(li.firstChild){ span.appendChild(li.firstChild); }
+    li.appendChild(span);
+    span.addEventListener("click", function(){ gotoTehonPage(page); });
+  });
 })();
 </script>
 </body>
