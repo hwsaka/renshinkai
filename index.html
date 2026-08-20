@@ -265,6 +265,10 @@ footer{
 .gd-tag{display:inline-block;background:rgba(184,151,79,.2);color:#e7d4a3;border-radius:4px;padding:0 7px;font-size:12.5px;font-weight:700}
 .gd-note{background:rgba(184,151,79,.1);border:1px solid rgba(184,151,79,.28);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#cbb98f;margin-top:10px;line-height:1.8}
 .gd-body b{color:var(--paper)}
+/* ---------- 審査科目オーバーレイ（アプリ内表示） ---------- */
+#shinsaWrap{position:fixed;inset:0;z-index:85;display:none;background:#fff}
+#shinsaWrap.open{display:block}
+#shinsaFrame{border:0;width:100%;height:100%;display:block}
 </style>
 </head>
 <body>
@@ -390,6 +394,8 @@ footer{
   <div id="pct">0%</div>
   <div id="err"></div>
 </div>
+<!-- 審査科目：アプリ内オーバーレイ（別タブにせず教本の上に重ねて表示） -->
+<div id="shinsaWrap"><iframe id="shinsaFrame" title="審査科目" loading="lazy"></iframe></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 <script>
@@ -571,9 +577,9 @@ function buildTOC(){
   CONFIG.TOC.forEach(item => {
     const b = document.createElement('button');
     if(item.url){
-      // URL項目：別ページを新しいタブで開く（book.pdfのページ送りではない）
-      b.innerHTML = '<span>' + item.label + '</span><span class="p">開く ↗</span>';
-      b.onclick = () => { closeTOC(); window.open(item.url, '_blank'); };
+      // URL項目：別タブにせず、教本アプリ内にオーバーレイ表示（PWAでも戻れる）
+      b.innerHTML = '<span>' + item.label + '</span><span class="p">開く</span>';
+      b.onclick = () => { closeTOC(); openShinsa(item.url); };
     }else{
       b.innerHTML = '<span>' + item.label + '</span><span class="p">' + item.page + '</span>';
       b.onclick = () => { goto(item.page); closeTOC(); };
@@ -585,6 +591,15 @@ function openGuide(){ const m=$('#guideModal'); m.classList.add('open'); m.query
 function closeGuide(){ $('#guideModal').classList.remove('open'); }
 function openTOC(){ $('#toc').classList.add('open'); $('#scrim').classList.add('on'); $('#tocBtn').setAttribute('aria-expanded','true'); }
 function closeTOC(){ $('#toc').classList.remove('open'); $('#scrim').classList.remove('on'); $('#tocBtn').setAttribute('aria-expanded','false'); }
+/* ---- 審査科目オーバーレイ ---- */
+function openShinsa(url){
+  const wrap = $('#shinsaWrap'), fr = $('#shinsaFrame');
+  if(fr.getAttribute('data-src') !== url){ fr.src = url; fr.setAttribute('data-src', url); }
+  wrap.classList.add('open');
+}
+function closeShinsa(){ $('#shinsaWrap').classList.remove('open'); }
+// 審査科目ページ（iframe内）からの「もどる」通知で閉じる
+window.addEventListener('message', e => { if(e && e.data === 'closeShinsa') closeShinsa(); });
 /* ---- 拡大縮小 ---- */
 function setZoom(z){
   zoom = Math.max(0.6, Math.min(2.6, +z.toFixed(2)));
@@ -604,6 +619,11 @@ $('#gdClose').onclick = closeGuide;
 $('#pageInput').addEventListener('change', e => goto(parseInt(e.target.value,10) || 1));
 $('#pageInput').addEventListener('keydown', e => { if(e.key === 'Enter') e.target.blur(); });
 document.addEventListener('keydown', e => {
+  // 審査科目オーバーレイが開いているときは Esc で閉じるだけ
+  if($('#shinsaWrap').classList.contains('open')){
+    if(e.key === 'Escape') closeShinsa();
+    return;
+  }
   // 使い方ガイドが開いているときは Esc で閉じるだけ
   if($('#guideModal').classList.contains('open')){
     if(e.key === 'Escape') closeGuide();

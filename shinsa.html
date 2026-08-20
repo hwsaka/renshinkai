@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="noindex, nofollow">
 <title>合気道錬身会 審査科目（令和7年度）</title>
 <style>
   :root{
@@ -208,7 +208,7 @@
 </style>
 </head>
 <body>
-<div class="backbar"><a href="./">← 教本にもどる</a></div>
+<div class="backbar"><a href="./" id="backLink">← 教本にもどる</a></div>
 <header class="top">
   <div class="chapter-label">合気道教本　付録</div>
   <div class="kan">合 気 道 錬 身 会</div>
@@ -855,8 +855,35 @@
     if(e.target.id === "jModal") closeJ();  // 背景クリックで閉じる
   });
   document.addEventListener("keydown", function(e){
-    if(e.key === "Escape") closeJ();
+    if(e.key !== "Escape") return;
+    if($("#jModal").classList.contains("open")){ closeJ(); return; }   // まず日誌を閉じる
+    // 教本内オーバーレイ表示なら Esc でオーバーレイを閉じる
+    if(window.parent && window.parent !== window){
+      try{ window.parent.postMessage("closeShinsa", "*"); }catch(_){}
+    }
   });
+
+  // 「教本にもどる」：開かれ方に応じて最速で戻る
+  var back = document.getElementById("backLink");
+  if(back){
+    back.addEventListener("click", function(e){
+      // (1) 教本アプリ内にオーバーレイ表示（iframe）→ 親に閉じるよう通知（PWAでも確実に戻れる）
+      if(window.parent && window.parent !== window){
+        e.preventDefault();
+        try{ window.parent.postMessage("closeShinsa", "*"); }catch(_){}
+        return;
+      }
+      // (2) 別タブで開かれている → タブを閉じて読み込み済みの教本へ即戻る
+      if(window.opener && !window.opener.closed){
+        e.preventDefault();
+        try{ window.opener.focus(); }catch(_){}
+        window.close();
+        setTimeout(function(){ location.href = "./"; }, 300);
+        return;
+      }
+      // (3) それ以外（直接開いた場合）は通常どおり教本トップへ遷移（href="./"）
+    });
+  }
 })();
 </script>
 </body>
