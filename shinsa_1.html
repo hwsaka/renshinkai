@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>合気道錬身会 審査科目（令和7年度）</title>
+<style>
+  :root{
+    --ink:#1f2a24;
+    --paper:#f7f9f4;
+    --band:#2f5d46;
+    --band2:#3f7a5c;
+    --line:#c9d6cb;
+    --soft:#eef3ec;
+    --warn:#8a5a00;
+    --warnbg:#fff6e0;
+    --accent:#7a1f1f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.85;
+    -webkit-text-size-adjust:100%;
+  }
+  header.top{
+    background:linear-gradient(180deg,var(--band),var(--band2));
+    color:#fff;
+    padding:26px 20px 22px;
+    text-align:center;
+  }
+  header.top .kan{font-size:13px;letter-spacing:.35em;opacity:.85;}
+  header.top h1{margin:6px 0 4px;font-size:23px;letter-spacing:.12em;}
+  header.top .sub{font-size:13px;opacity:.9;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 16px 60px;}
+
+  .note{
+    background:var(--warnbg);
+    border:1px solid #e8cf8f;
+    color:var(--warn);
+    border-radius:10px;
+    padding:12px 16px;
+    margin:20px 0 8px;
+    font-size:13.5px;
+    line-height:1.7;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  .note b{color:#6d4600;}
+  .ok{
+    background:#eaf5ee;border:1px solid #b9dcc5;color:#215a37;
+  }
+  .ok b{color:#184e2c;}
+
+  /* 目次 */
+  nav.toc{
+    background:var(--soft);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 18px;
+    margin:22px 0 10px;
+  }
+  nav.toc h2{margin:0 0 10px;font-size:16px;letter-spacing:.14em;color:var(--band);}
+  nav.toc .grp{margin:10px 0 4px;font-weight:700;color:var(--accent);font-size:14.5px;}
+  nav.toc ul{list-style:none;margin:0 0 6px;padding:0;display:flex;flex-wrap:wrap;gap:6px 10px;}
+  nav.toc a{
+    display:inline-block;
+    text-decoration:none;
+    color:var(--band);
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:3px 12px;
+    font-size:13px;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  nav.toc a:hover{background:var(--band);color:#fff;}
+
+  section.part{margin-top:34px;}
+  .part-title{
+    font-size:19px;
+    letter-spacing:.2em;
+    color:#fff;
+    background:var(--accent);
+    padding:8px 16px;
+    border-radius:8px;
+    margin:0 0 6px;
+  }
+
+  .rank{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:6px 18px 14px;
+    margin:16px 0;
+    scroll-margin-top:12px;
+  }
+  .rank h3{
+    font-size:17px;
+    letter-spacing:.12em;
+    color:var(--band);
+    border-bottom:2px solid var(--soft);
+    padding:10px 0 8px;
+    margin:0 0 8px;
+  }
+  .rank h3 .tag{
+    font-size:12px;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    color:#fff;background:var(--band2);
+    border-radius:6px;padding:2px 8px;margin-left:8px;vertical-align:middle;letter-spacing:.05em;
+  }
+  ol.tech{margin:4px 0;padding-left:1.6em;}
+  ol.tech li{padding:1px 0;}
+  .cond{
+    font-size:12.5px;
+    color:#4b5a50;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    background:var(--soft);
+    border-radius:6px;
+    padding:6px 10px;
+    margin-top:8px;
+  }
+  .sub-h{font-weight:700;color:var(--accent);margin:12px 0 2px;font-size:14px;}
+  ul.plain{margin:2px 0;padding-left:1.4em;}
+  ul.plain li{padding:1px 0;}
+  .q{color:var(--accent);font-size:11px;font-family:sans-serif;vertical-align:super;}
+  .legend{font-size:12.5px;color:#4b5a50;font-family:sans-serif;margin:2px 0 0;}
+  footer{padding:26px 16px;text-align:center;color:#6b7a70;font-size:12px;font-family:sans-serif;}
+  .cols{columns:2;column-gap:26px;}
+  @media(max-width:560px){.cols{columns:1;}}
+  a.backtop{font-size:11px;font-family:sans-serif;color:var(--band2);text-decoration:none;float:right;}
+
+  /* 教本へ戻るバー */
+  .backbar{
+    background:var(--band);
+  }
+  .backbar a{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:13px;color:#fff;text-decoration:none;
+    padding:9px 16px;
+  }
+  .backbar a:hover{text-decoration:underline;}
+
+  /* 付録の章見出し */
+  .chapter-label{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:12px;letter-spacing:.3em;opacity:.85;margin-bottom:2px;
+  }
+
+  /* ===== 稽古日誌（カレンダー保存） ===== */
+  .jfab{
+    position:fixed;right:16px;bottom:16px;z-index:60;
+    width:56px;height:56px;border-radius:50%;
+    border:none;background:var(--accent);color:#fff;
+    font-size:24px;line-height:1;cursor:pointer;
+    box-shadow:0 6px 18px rgba(0,0,0,.28);
+    display:grid;place-items:center;
+  }
+  .jfab:hover{background:#611717;}
+  .jfab:active{transform:scale(.94);}
+  .jmodal{
+    position:fixed;inset:0;z-index:70;display:none;
+    align-items:center;justify-content:center;padding:18px;
+    background:rgba(20,30,24,.55);
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  .jmodal.open{display:flex;}
+  .jcard{
+    width:100%;max-width:440px;max-height:90vh;overflow-y:auto;
+    background:#fff;border-radius:12px;border:1px solid var(--line);
+    padding:20px 20px 16px;box-shadow:0 20px 50px rgba(0,0,0,.3);
+  }
+  .jcard h2{
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    font-size:17px;letter-spacing:.14em;color:var(--band);margin:0 0 14px;
+  }
+  .jcard label{display:block;font-size:12.5px;color:#556;margin-bottom:12px;}
+  .jcard input,.jcard textarea{
+    display:block;width:100%;margin-top:5px;
+    border:1px solid var(--line);border-radius:7px;
+    font:inherit;font-size:15px;color:var(--ink);padding:9px 10px;background:#fbfdfb;
+  }
+  .jcard input:focus,.jcard textarea:focus{outline:none;border-color:var(--band2);}
+  .jcard textarea{resize:vertical;line-height:1.7;min-height:104px;}
+  .jactions{display:flex;gap:10px;justify-content:flex-end;margin-top:4px;}
+  .jbtn{font:inherit;font-size:14px;border-radius:999px;padding:9px 16px;cursor:pointer;border:1px solid var(--line);background:#fff;color:#445;}
+  .jbtn.save{background:var(--band);border-color:var(--band);color:#fff;font-weight:700;}
+  .jbtn.save:hover{background:#234a37;}
+  .jhint{font-size:11.5px;color:#6b7a70;line-height:1.75;margin:12px 0 0;}
+  .jcard select{
+    display:block;width:100%;margin-top:5px;
+    border:1px solid var(--line);border-radius:7px;
+    font:inherit;font-size:15px;color:var(--ink);padding:9px 10px;background:#fbfdfb;
+  }
+  .jcard select:focus{outline:none;border-color:var(--band2);}
+
+  /* 各級見出しの「＋日誌」ボタン */
+  .rlog{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:11px;color:#fff;background:var(--band2);
+    border:none;border-radius:6px;padding:3px 10px;margin-left:10px;cursor:pointer;
+    vertical-align:middle;letter-spacing:.03em;
+  }
+  .rlog:hover{background:var(--band);}
+</style>
+</head>
+<body>
+<div class="backbar"><a href="./">← 教本にもどる</a></div>
+<header class="top">
+  <div class="chapter-label">合気道教本　付録</div>
+  <div class="kan">合 気 道 錬 身 会</div>
+  <h1>審査科目一覧</h1>
+  <div class="sub">令和7年度 ／ 少年部・一般部</div>
+</header>
+
+<div class="wrap">
+
+  <div class="note ok">
+    <b>本一覧は令和7年度版です。</b> ご提供いただいた正式テキストどおりに転記しています。
+    審査科目は将来刷新される場合があります。
+  </div>
+
+  <nav class="toc" id="top">
+    <h2>目 次</h2>
+
+    <div class="grp">少年部</div>
+    <ul>
+      <li><a href="#j-9-10">9〜10級</a></li>
+      <li><a href="#j-8">8級</a></li>
+      <li><a href="#j-7">7級</a></li>
+      <li><a href="#j-5-6">5〜6級</a></li>
+      <li><a href="#j-3-4">3〜4級</a></li>
+      <li><a href="#j-1-2">1〜2級</a></li>
+      <li><a href="#j-sho">初段</a></li>
+    </ul>
+
+    <div class="grp">一般部</div>
+    <ul>
+      <li><a href="#g-9-10">9〜10級</a></li>
+      <li><a href="#g-6-8">6〜8級</a></li>
+      <li><a href="#g-5">5級</a></li>
+      <li><a href="#g-4">4級</a></li>
+      <li><a href="#g-3-1">3〜1級（昇級）</a></li>
+      <li><a href="#g-shodan">昇段審査</a></li>
+      <li><a href="#g-yudan">有段審査</a></li>
+    </ul>
+  </nav>
+
+  <!-- ============ 少年部 ============ -->
+  <section class="part" id="shonen">
+    <h2 class="part-title">少 年 部</h2>
+
+    <div class="rank" id="j-9-10">
+      <h3>9〜10級 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>正座法</li>
+        <li>礼法</li>
+        <li>膝行法</li>
+        <li>前方回転受け身</li>
+        <li>後方回転受け身</li>
+        <li>体の変更（一）</li>
+        <li>体の変更（二）</li>
+      </ol>
+    </div>
+
+    <div class="rank" id="j-8">
+      <h3>8級 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>正座法</li>
+        <li>礼法</li>
+        <li>膝行法</li>
+        <li>前方回転受け身</li>
+        <li>後方回転受け身</li>
+        <li>体の変更（一）</li>
+        <li>体の変更（二）</li>
+        <li>臂力の養成（一）</li>
+        <li>臂力の養成（二）</li>
+      </ol>
+    </div>
+
+    <div class="rank" id="j-7">
+      <h3>7級 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>正座法</li>
+        <li>礼法</li>
+        <li>膝行法</li>
+        <li>前方回転受け身</li>
+        <li>後方回転受け身</li>
+        <li>終末動作（一）</li>
+        <li>終末動作（二）</li>
+        <li>片手持ち四方投げ（一）</li>
+        <li>両手持ち四方投げ（二）</li>
+      </ol>
+    </div>
+
+    <div class="rank" id="j-5-6">
+      <h3>5〜6級 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>正座法</li>
+        <li>礼法</li>
+        <li>膝行法</li>
+        <li>前方回転受け身</li>
+        <li>後方回転受け身</li>
+        <li>基本動作連続</li>
+        <li>正面打ち一ヶ条抑え（一）</li>
+        <li>正面打ち一ヶ条抑え（二）</li>
+        <li>片手持ち側面入身投げ（一）</li>
+      </ol>
+    </div>
+
+    <div class="rank" id="j-3-4">
+      <h3>3〜4級 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>右半身の構え</li>
+        <li>左半身の構え</li>
+        <li>前方回転受け身</li>
+        <li>体の変更（一）</li>
+        <li>体の変更（二）</li>
+        <li>臂力の養成（一）</li>
+        <li>臂力の養成（二）</li>
+        <li>座り技 正面打ち一ヶ条抑え（一）</li>
+        <li>片手持ち二ヶ条抑え（二）</li>
+        <li>正面打ち三ヶ条抑え（一）</li>
+        <li>両手持ち天地投げ（一）</li>
+        <li>正面打ち正面入身投げ（二）</li>
+      </ol>
+    </div>
+
+    <div class="rank" id="j-1-2">
+      <h3>1〜2級 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>右半身の構え</li>
+        <li>左半身の構え</li>
+        <li>前方回転受け身</li>
+        <li>体の変更（一）</li>
+        <li>体の変更（二）</li>
+        <li>臂力の養成（一）</li>
+        <li>臂力の養成（二）</li>
+        <li>終末動作（一）</li>
+        <li>終末動作（二）</li>
+        <li>片手持ち二ヶ条抑え（一）</li>
+        <li>正面打ち三ヶ条抑え（二）</li>
+        <li>正面打ち小手返し（二）</li>
+        <li>両手持ち肘当て呼吸投げ（二）</li>
+      </ol>
+    </div>
+
+    <div class="rank" id="j-sho">
+      <h3>初段 <span class="tag">少年部</span><a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>右半身の構え</li>
+        <li>左半身の構え</li>
+        <li>体の変更（一）</li>
+        <li>体の変更（二）</li>
+        <li>臂力の養成（一）</li>
+        <li>臂力の養成（二）</li>
+        <li>終末動作（一）</li>
+        <li>終末動作（二）</li>
+        <li>半身半立ち両手持ち四方投げ</li>
+        <li>正面打ち二ヶ条抑え（一）</li>
+        <li>指定技</li>
+        <li>指定技</li>
+        <li>正面打ち自由技</li>
+      </ol>
+
+      <div class="sub-h">初段 指定技</div>
+      <ul class="plain">
+        <li>片手持ち四方投げ（一）（二）</li>
+        <li>両手持ち四方投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち一ヶ条抑え（一）（二）</li>
+        <li>横面打ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>正面打ち三ヶ条抑え（一）（二）</li>
+        <li>横面打ち三ヶ条抑え（一）（二）</li>
+        <li>正面打ち四ヶ条抑え（一）（二）</li>
+        <li>片手持ち側面入身投げ（一）（二）</li>
+        <li>横面打ち正面入身投げ（一）（二）</li>
+        <li>肩持ち肘締め（一）（二）</li>
+        <li>両手持ち天地投げ（一）（二）</li>
+        <li>正面打ち小手返し（一）（二）</li>
+      </ul>
+      <div class="cond">（※印は座り技も含む）<br>少年部の基本動作はすべて単独動作。</div>
+    </div>
+  </section>
+
+  <!-- ============ 一般部 ============ -->
+  <section class="part" id="ippan">
+    <h2 class="part-title">一 般 部</h2>
+
+    <div class="rank" id="g-9-10">
+      <h3>9〜10級 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>右半身の構え</li>
+        <li>左半身の構え</li>
+        <li>正座法</li>
+        <li>膝行法</li>
+        <li>体の変更（一）</li>
+        <li>体の変更（二）</li>
+        <li>臂力の養成（一）</li>
+        <li>臂力の養成（二）</li>
+        <li>終末動作（一）</li>
+        <li>終末動作（二）</li>
+      </ol>
+      <div class="cond">すべて単独動作、基本動作は片側。</div>
+    </div>
+
+    <div class="rank" id="g-6-8">
+      <h3>6〜8級 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>右半身の構え</li>
+        <li>左半身の構え</li>
+        <li>正座法</li>
+        <li>膝行法</li>
+        <li>体の変更（一）</li>
+        <li>体の変更（二）</li>
+        <li>臂力の養成（一）</li>
+        <li>臂力の養成（二）</li>
+        <li>終末動作（一）</li>
+        <li>終末動作（二）</li>
+        <li>片手持ち四方投げ（一）</li>
+        <li>片手持ち四方投げ（二）</li>
+        <li>正面打ち一ヶ条抑え（一）</li>
+        <li>正面打ち一ヶ条抑え（二）</li>
+      </ol>
+      <div class="cond">基本動作は単独動作、技法は左右。</div>
+    </div>
+
+    <div class="rank" id="g-5">
+      <h3>5級 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>右半身の構え</li>
+        <li>左半身の構え</li>
+        <li>体の変更（一）</li>
+        <li>体の変更（二）</li>
+        <li>臂力の養成（一）</li>
+        <li>臂力の養成（二）</li>
+        <li>片手持ち一ヶ条抑え（一）</li>
+        <li>片手持ち二ヶ条抑え（二）</li>
+        <li>正面打ち三ヶ条抑え（一）</li>
+        <li>正面打ち三ヶ条抑え（二）</li>
+        <li>片手持ち側面入身投げ（一）</li>
+        <li>横面打ち正面入身投げ（二）</li>
+        <li>終末動作（一）</li>
+        <li>終末動作（二）</li>
+      </ol>
+      <div class="cond">基本動作は相対動作、技法は左右。</div>
+    </div>
+
+    <div class="rank" id="g-4">
+      <h3>4級 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>右半身の構え</li>
+        <li>左半身の構え</li>
+        <li>体の変更（一）</li>
+        <li>体の変更（二）</li>
+        <li>臂力の養成（一）</li>
+        <li>臂力の養成（二）</li>
+        <li>正面打ち四ヶ条抑え（一）</li>
+        <li>胸持ち肘締め（二）</li>
+        <li>正面打ち小手返し（二）</li>
+        <li>両手持ち天地投げ（一）</li>
+        <li>座り技両手持ち呼吸法（一）</li>
+        <li>指定技</li>
+        <li>終末動作（一）</li>
+        <li>終末動作（二）</li>
+      </ol>
+      <div class="cond">基本動作は相対動作、技法は左右。</div>
+
+      <div class="sub-h">4級 指定技</div>
+      <ul class="plain">
+        <li>片手持ち四方投げ（一）（二）</li>
+        <li>両手持ち四方投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち一ヶ条抑え（一）（二）</li>
+        <li>横面打ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>正面打ち三ヶ条抑え（一）（二）</li>
+        <li>横面打ち三ヶ条抑え（一）（二）</li>
+        <li>正面打ち四ヶ条抑え（一）（二）</li>
+        <li>片手持ち側面入身投げ（一）（二）</li>
+        <li>横面打ち正面入身投げ（一）（二）</li>
+        <li>肩持ち肘締め（一）（二）</li>
+        <li>両手持ち天地投げ（一）（二）</li>
+        <li>正面打ち小手返し（一）（二）</li>
+      </ul>
+      <div class="cond">（※印は座り技も含む）</div>
+    </div>
+
+    <div class="rank" id="g-3-1">
+      <h3>3〜1級 <span class="tag">昇級審査</span><a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>右半身の構え</li>
+        <li>左半身の構え</li>
+        <li>体の変更（一）</li>
+        <li>臂力の養成（一）</li>
+        <li>臂力の養成（二）</li>
+        <li>座り技横面打ち三ヶ条抑え（二）</li>
+        <li>肩持ち側面入身投げ（一）</li>
+        <li>両手持ち天地投げ（一）</li>
+        <li>指定技</li>
+        <li>指定技</li>
+        <li>指定技</li>
+        <li>終末動作（一）</li>
+        <li>終末動作（二）</li>
+      </ol>
+
+      <div class="sub-h">指定技</div>
+      <ul class="plain cols">
+        <li>片手持ち四方投げ（一）（二）</li>
+        <li>両手持ち四方投げ（一）（二）</li>
+        <li>横面打ち四方投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肩持ち一ヶ条抑え（一）（二）</li>
+        <li>後技両手持ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肩持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>正面打ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>正面打ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち三ヶ条抑え（一）（二）</li>
+        <li>後技両手持ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>正面打ち四ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち四ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち側面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>肩持ち側面入身投げ（二）</li>
+        <li><span class="q">※</span>正面打ち正面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>横面打ち正面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>横面打ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>肩持ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>胸持ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>正面打ち小手返し（一）（二）</li>
+        <li><span class="q">※</span>横面打ち小手返し（一）（二）</li>
+        <li>座り技両手持ち天地投げ（一）</li>
+        <li>座り技両手持ち呼吸法（一）（二）</li>
+      </ul>
+      <div class="cond">（※印は座り技も含む）</div>
+    </div>
+
+    <div class="rank" id="g-shodan">
+      <h3>昇段審査 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>右半身の構え</li>
+        <li>左半身の構え</li>
+        <li>臂力の養成（一）</li>
+        <li>臂力の養成（二）</li>
+        <li>座り技横面打ち肘締め（二）</li>
+        <li>肩持ち二ヶ条抑え（一）</li>
+        <li>片手持ち小手返し（一）</li>
+        <li>指定技</li>
+        <li>指定技</li>
+        <li>指定技</li>
+        <li>指定技</li>
+        <li>終末動作（一）</li>
+        <li>終末動作（二）</li>
+        <li>指定自由技</li>
+      </ol>
+
+      <div class="sub-h">指定自由技</div>
+      <ul class="plain cols">
+        <li>正面打ち自由技</li>
+        <li>横面打ち自由技</li>
+        <li>片手持ち自由技</li>
+        <li>両手持ち自由技</li>
+        <li>正面突き自由技</li>
+      </ul>
+
+      <div class="sub-h">指定技</div>
+      <ul class="plain cols">
+        <li>片手持ち四方投げ（一）（二）</li>
+        <li>両手持ち四方投げ（一）（二）</li>
+        <li>横面打ち四方投げ（一）（二）</li>
+        <li>半身半立ち片手持ち四方投げ（一）（二）</li>
+        <li>半身半立ち両手持ち四方投げ</li>
+        <li><span class="q">※</span>正面打ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肩持ち一ヶ条抑え（一）（二）</li>
+        <li>後技両手持ち一ヶ条抑え（一）（二）</li>
+        <li>後技片手襟持ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肩持ち二ヶ条抑え（二）</li>
+        <li><span class="q">※</span>正面打ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>正面打ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肩持ち三ヶ条抑え（一）（二）</li>
+        <li>後技両手持ち三ヶ条抑え（一）（二）</li>
+        <li>後技片手襟持ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>正面打ち四ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち四ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち四ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち側面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>肩持ち側面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち正面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>横面打ち正面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>横面打ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>肩持ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>胸持ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>正面打ち肘当て呼吸投げ（一）（二）</li>
+        <li><span class="q">※</span>片手持ち肘当て呼吸投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち小手返し（一）（二）</li>
+        <li><span class="q">※</span>横面打ち小手返し（一）（二）</li>
+        <li><span class="q">※</span>正面突き小手返し（一）（二）</li>
+        <li><span class="q">※</span>両手持ち天地投げ（一）（二）</li>
+        <li>座り技両手持ち呼吸法（一）（二）（三）</li>
+      </ul>
+      <div class="cond">（※印は座り技も含む）</div>
+    </div>
+
+    <div class="rank" id="g-yudan">
+      <h3>有段審査 <a class="backtop" href="#top">▲ 目次</a></h3>
+      <ol class="tech">
+        <li>体の変更（一）</li>
+        <li>座り技片手持ち三ヶ条抑え（二）</li>
+        <li>正面突き肘当て呼吸投げ（一）</li>
+        <li>指定技</li>
+        <li>指定技</li>
+        <li>指定技</li>
+        <li>指定技</li>
+        <li>終末動作（一）</li>
+        <li>終末動作（二）</li>
+        <li>指定自由技</li>
+        <li>指定自由技</li>
+        <li>三人取り自由技（木剣、短刀、徒手）</li>
+      </ol>
+      <div class="cond">（弐段受験者は二人取り　短刀、徒手）</div>
+
+      <div class="sub-h">指定自由技</div>
+      <ul class="plain cols">
+        <li>正面打ち自由技</li>
+        <li>横面打ち自由技</li>
+        <li>片手持ち自由技</li>
+        <li>両手持ち自由技</li>
+        <li>正面突き自由技</li>
+        <li>肩持ち自由技</li>
+        <li>正面横面打ち自由技</li>
+        <li>後技両手持ち自由技</li>
+        <li>後技両肘持ち自由技</li>
+        <li>後技両肩持ち自由技</li>
+        <li>短刀取り自由技</li>
+        <li>剣取り自由技</li>
+      </ul>
+
+      <div class="sub-h">指定技</div>
+      <ul class="plain cols">
+        <li>片手持ち四方投げ（一）（二）</li>
+        <li>両手持ち四方投げ（一）（二）</li>
+        <li>横面打ち四方投げ（一）（二）</li>
+        <li>正面打ち四方投げ</li>
+        <li>半身半立ち片手持ち四方投げ（一）（二）</li>
+        <li>半身半立ち両手持ち四方投げ</li>
+        <li><span class="q">※</span>正面打ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肘持ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肩持ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>胸持ち一ヶ条抑え（一）（二）</li>
+        <li>後技両手持ち一ヶ条抑え（一）（二）</li>
+        <li>後技片手襟持ち一ヶ条抑え（一）（二）</li>
+        <li>後技両肘持ち一ヶ条抑え（一）（二）</li>
+        <li>後技両肩持ち一ヶ条抑え（一）（二）</li>
+        <li>後技襟持ち一ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>両手持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手綾持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肩持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>胸持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肘持ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>正面打ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち二ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>正面打ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>両手持ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肘持ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肩持ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>胸持ち三ヶ条抑え（一）（二）</li>
+        <li>後技両手持ち三ヶ条抑え（一）（二）</li>
+        <li>後技片手襟持ち三ヶ条抑え（一）（二）</li>
+        <li>後技両肘持ち三ヶ条抑え（一）（二）</li>
+        <li>後技両肩持ち三ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>正面打ち四ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>横面打ち四ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち四ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肘持ち四ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>肩持ち四ヶ条抑え（一）（二）</li>
+        <li><span class="q">※</span>片手持ち側面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>肩持ち側面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち側面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>横面打ち側面入身投げ（一）（二）</li>
+        <li>後技両手持ち側面入身投げ（一）（二）</li>
+        <li>後技両肘持ち側面入身投げ（一）（二）</li>
+        <li>後技両肩持ち側面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち正面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>横面打ち正面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>片手持ち正面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>両手持ち正面入身投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>横面打ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>片手持ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>両手持ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>肩持ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>胸持ち肘締め（一）（二）</li>
+        <li>後技両手持ち肘締め（一）（二）</li>
+        <li><span class="q">※</span>正面打ち肘当て呼吸投げ（一）（二）</li>
+        <li><span class="q">※</span>横面打ち肘当て呼吸投げ（一）（二）</li>
+        <li><span class="q">※</span>片手持ち肘当て呼吸投げ（一）（二）</li>
+        <li><span class="q">※</span>正面突き肘当て呼吸投げ（一）（二）</li>
+        <li>後技両手持ち肘当て呼吸投げ（一）（二）</li>
+        <li><span class="q">※</span>正面打ち小手返し（一）（二）</li>
+        <li><span class="q">※</span>横面打ち小手返し（一）（二）</li>
+        <li><span class="q">※</span>片手持ち小手返し（一）（二）</li>
+        <li><span class="q">※</span>両手持ち小手返し（一）（二）</li>
+        <li><span class="q">※</span>正面突き小手返し（一）（二）</li>
+        <li>後技両手持ち小手返し（一）（二）</li>
+        <li><span class="q">※</span>両手持ち天地投げ（一）（二）</li>
+        <li>正面打ち呼吸投げ</li>
+        <li>横面打ち呼吸投げ</li>
+        <li>片手持ち呼吸投げ</li>
+        <li>両手持ち呼吸投げ</li>
+        <li>正面突き呼吸投げ</li>
+        <li>座り技両手持ち呼吸法（一）（二）（三）（四）（五）</li>
+      </ul>
+      <div class="cond">（※印は座り技も含む）</div>
+    </div>
+
+  </section>
+
+  <div class="note ok" style="margin-top:30px;">
+    <b>凡例</b>　<span class="q">※</span>＝座り技も含む。<br>
+    本一覧は令和7年度版です（将来刷新される場合があります）。
+  </div>
+
+</div>
+
+<footer>
+  合気道錬身会 審査科目一覧（令和7年度版）／ 合気道教本 付録<br>
+  ※審査科目は将来刷新される場合があります
+</footer>
+
+<!-- 稽古日誌 -->
+<button class="jfab" id="jFab" aria-label="稽古日誌を書く" title="稽古日誌">✎</button>
+<div class="jmodal" id="jModal" role="dialog" aria-modal="true" aria-labelledby="jTitle">
+  <div class="jcard">
+    <h2 id="jTitle">稽古日誌</h2>
+    <label>日付
+      <input type="date" id="jDate">
+    </label>
+    <label>稽古した級（審査科目）
+      <select id="jRank"></select>
+    </label>
+    <label>道場・場所
+      <input type="text" id="jPlace" placeholder="例：〇〇道場">
+    </label>
+    <label>内容（先生の指導・気づき・重要だと感じたこと）
+      <textarea id="jBody" rows="6" placeholder="先生の指導、気づいたこと、重要だと感じたこと…"></textarea>
+    </label>
+    <div class="jactions">
+      <button class="jbtn" id="jCancel" type="button">キャンセル</button>
+      <button class="jbtn save" id="jSave" type="button">カレンダーに保存</button>
+    </div>
+    <p class="jhint">「カレンダーに保存」を押すと Google カレンダーの登録画面が開きます。内容を確認して「保存」してください（日時・場所は後から編集できます）。</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(s){ return document.querySelector(s); };
+
+  // 各級（部＋級名）を収集 → セレクトと各見出しの「＋日誌」ボタンを生成
+  var ranks = [];
+  document.querySelectorAll("section.part").forEach(function(part){
+    var titleEl = part.querySelector(".part-title");
+    var div = titleEl ? titleEl.textContent.replace(/\s+/g,"").trim() : "";
+    part.querySelectorAll(".rank").forEach(function(rank){
+      var h = rank.querySelector("h3");
+      var name = (h.firstChild && h.firstChild.textContent ? h.firstChild.textContent : "")
+                   .replace(/\s+/g," ").trim();
+      var tagEl = h.querySelector(".tag");
+      var tag = tagEl ? tagEl.textContent.trim() : "";
+      var label = (div + " " + name + (tag && tag!==div ? "（"+tag+"）" : "")).replace(/\s+/g," ").trim();
+      ranks.push({ label:label, id:rank.id });
+    });
+  });
+
+  // セレクト生成
+  var sel = $("#jRank");
+  ranks.forEach(function(r){
+    var o = document.createElement("option");
+    o.value = r.label; o.textContent = r.label;
+    sel.appendChild(o);
+  });
+
+  // 各級の見出しに「＋日誌」ボタンを追加
+  ranks.forEach(function(r){
+    var rank = document.getElementById(r.id);
+    if(!rank) return;
+    var h = rank.querySelector("h3");
+    var btn = document.createElement("button");
+    btn.type = "button"; btn.className = "rlog"; btn.textContent = "＋日誌";
+    btn.setAttribute("aria-label", r.label + " を稽古日誌に記録");
+    btn.onclick = function(){ openJ(r.label); };
+    var bt = h.querySelector(".backtop");
+    if(bt) h.insertBefore(btn, bt); else h.appendChild(btn);
+  });
+
+  function openJ(rankLabel){
+    var d = new Date();
+    var iso = d.getFullYear() + "-" +
+              ("0"+(d.getMonth()+1)).slice(-2) + "-" +
+              ("0"+d.getDate()).slice(-2);
+    $("#jDate").value = iso;
+    if(rankLabel) $("#jRank").value = rankLabel;
+    $("#jBody").value = "";
+    $("#jModal").classList.add("open");
+    setTimeout(function(){ $("#jBody").focus(); }, 60);
+  }
+  function closeJ(){ $("#jModal").classList.remove("open"); }
+
+  function saveJ(){
+    var date = $("#jDate").value;
+    if(!date){ $("#jDate").focus(); return; }
+    var rank  = $("#jRank").value;
+    var place = $("#jPlace").value.trim();
+    var body  = $("#jBody").value.trim();
+
+    // 終日予定：終了日は翌日（Googleは終了日を含めない）
+    var d1 = date.replace(/-/g,"");
+    var dt = new Date(date + "T00:00:00");
+    dt.setDate(dt.getDate() + 1);
+    var d2 = dt.getFullYear() +
+             ("0"+(dt.getMonth()+1)).slice(-2) +
+             ("0"+dt.getDate()).slice(-2);
+
+    var title = rank || "合気道稽古";   // 選んだ当該の級名だけをタイトルに
+
+    var url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+              "&text="  + encodeURIComponent(title) +
+              "&dates=" + d1 + "/" + d2;
+    if(body)  url += "&details="  + encodeURIComponent(body);
+    if(place) url += "&location=" + encodeURIComponent(place);
+
+    window.open(url, "_blank", "noopener");
+    closeJ();
+  }
+
+  $("#jFab").onclick    = function(){ openJ(); };
+  $("#jCancel").onclick = closeJ;
+  $("#jSave").onclick   = saveJ;
+  $("#jModal").addEventListener("click", function(e){
+    if(e.target.id === "jModal") closeJ();  // 背景クリックで閉じる
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") closeJ();
+  });
+})();
+</script>
+</body>
+</html>
