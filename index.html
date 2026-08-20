@@ -419,6 +419,8 @@ const CONFIG = {
     { label:'小手返し',            page:84 },
     { label:'呼吸法',              page:90 },
     { label:'英訳付録',            page:96 },
+    // 審査科目：別ページ（shinsa.html）を開くリンク。刷新は shinsa.html を差し替えるだけ
+    { label:'審査科目',            url:'shinsa.html' },
   ]
 };
 /* ========================================================= */
@@ -568,8 +570,14 @@ function buildTOC(){
   }
   CONFIG.TOC.forEach(item => {
     const b = document.createElement('button');
-    b.innerHTML = '<span>' + item.label + '</span><span class="p">' + item.page + '</span>';
-    b.onclick = () => { goto(item.page); closeTOC(); };
+    if(item.url){
+      // URL項目：別ページを新しいタブで開く（book.pdfのページ送りではない）
+      b.innerHTML = '<span>' + item.label + '</span><span class="p">開く ↗</span>';
+      b.onclick = () => { closeTOC(); window.open(item.url, '_blank'); };
+    }else{
+      b.innerHTML = '<span>' + item.label + '</span><span class="p">' + item.page + '</span>';
+      b.onclick = () => { goto(item.page); closeTOC(); };
+    }
     list.appendChild(b);
   });
 }
