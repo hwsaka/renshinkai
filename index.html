@@ -3,18 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>教本</title>
-<!-- PWA（ホーム画面に追加してアプリのように使う） -->
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#141a24">
-<link rel="apple-touch-icon" href="icon-180.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="合気道錬身会教本">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --ink:#141a24;
@@ -27,9 +22,10 @@
   --text-dim:#9aa3ae;
   --shadow:0 24px 60px rgba(0,0,0,.55);
   --bar-h:64px;
-  --foot-h:84px;
 }
+
 *{box-sizing:border-box;margin:0;padding:0}
+
 html,body{height:100%}
 body{
   background:
@@ -39,6 +35,7 @@ body{
   overflow:hidden;
   -webkit-text-size-adjust:100%;
 }
+
 /* ---------- 上部バー ---------- */
 header{
   position:fixed;top:0;left:0;right:0;height:var(--bar-h);
@@ -64,6 +61,7 @@ header{
   white-space:nowrap;
 }
 header .spacer{flex:1}
+
 .btn{
   appearance:none;border:1px solid rgba(184,151,79,.35);
   background:rgba(255,255,255,.03);
@@ -76,10 +74,10 @@ header .spacer{flex:1}
 .btn:hover{border-color:var(--gold);color:#fff;background:rgba(184,151,79,.12)}
 .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .btn[aria-pressed="true"]{background:rgba(184,151,79,.18);border-color:var(--gold)}
+
 /* ---------- 本体 ---------- */
 #stage{
-  position:absolute;
-  inset:var(--bar-h) 0 calc(var(--foot-h) + env(safe-area-inset-bottom)) 0;
+  position:absolute;inset:var(--bar-h) 0 84px 0;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
@@ -91,16 +89,17 @@ header .spacer{flex:1}
 #flipbook{box-shadow:var(--shadow)}
 #flipbook .page{background:var(--paper)}
 #flipbook img{display:block;width:100%;height:100%}
+
 /* 本の中央の溝 */
 #stage::after{
   content:"";position:absolute;pointer-events:none;
 }
+
 /* ---------- 下部バー ---------- */
 footer{
   position:fixed;left:0;right:0;bottom:0;
   display:flex;align-items:center;justify-content:center;gap:10px;
   padding:14px 20px;
-  padding-bottom:calc(14px + env(safe-area-inset-bottom));
   background:linear-gradient(0deg,rgba(13,17,25,.94),rgba(13,17,25,.6) 70%,transparent);
   z-index:40;
 }
@@ -114,6 +113,7 @@ footer{
 .nav:hover{border-color:var(--gold);background:rgba(184,151,79,.12)}
 .nav:disabled{opacity:.28;cursor:default}
 .nav:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
 .counter{
   display:flex;align-items:center;gap:6px;
   font-family:"Noto Serif JP",serif;font-size:14px;
@@ -126,8 +126,10 @@ footer{
   color:var(--paper);font:inherit;
 }
 .counter input:focus{outline:none;border-color:var(--gold)}
+
 .zoomctl{display:flex;align-items:center;gap:6px;margin-left:8px}
 .zoomctl .lvl{font-size:12px;color:var(--text-dim);min-width:44px;text-align:center;font-variant-numeric:tabular-nums}
+
 /* ---------- 目次パネル ---------- */
 #toc{
   position:fixed;top:0;bottom:0;left:0;width:320px;max-width:86vw;
@@ -159,6 +161,7 @@ footer{
   opacity:0;pointer-events:none;transition:opacity .3s;z-index:55;
 }
 #scrim.on{opacity:1;pointer-events:auto}
+
 /* ---------- 読み込み ---------- */
 #loader{
   position:fixed;inset:0;display:grid;place-content:center;gap:22px;justify-items:center;
@@ -170,129 +173,88 @@ footer{
 #bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
 #pct{font-size:11px;letter-spacing:.2em;color:var(--text-dim);font-variant-numeric:tabular-nums}
 #err{max-width:420px;text-align:center;font-size:13px;line-height:1.9;color:#e2a3a3;display:none;padding:0 24px}
+
 @media (max-width:720px){
-  :root{--bar-h:56px;--foot-h:72px}
+  :root{--bar-h:56px}
   .brand{font-size:14px;letter-spacing:.14em}
-  header{gap:10px;padding:0 12px}
-  #dl{padding:7px 10px;font-size:12px}   /* 縦向き（狭い画面）でもPDF保存ボタンを表示し、少し小さくして収める */
+  .hide-sm{display:none}
   footer{gap:6px;padding:10px 12px}
   .counter{min-width:auto}
-}
-/* 画面が特に狭いときは注意書きを隠してヘッダーの詰まりを防ぐ */
-@media (max-width:430px){
-  .brand small{display:none}
-  .notice{font-size:9px;letter-spacing:.06em}
-}
-/* 横向きで画面が低いとき（スマホ横など）はバーを薄くして本の表示領域を最大化 */
-@media (orientation:landscape) and (max-height:600px){
-  :root{--bar-h:42px;--foot-h:46px}
-  .brand{font-size:12px;letter-spacing:.1em;line-height:1.15}
-  .brand small{display:none}
-  .notice{display:none}
-  header{gap:10px;padding:0 12px}
-  footer{gap:6px;padding:6px 12px}
-  .nav{width:34px;height:34px;font-size:14px}
-  .counter{font-size:13px}
-  .counter input{width:46px;padding:4px 2px}
-  .zoomctl .lvl{min-width:38px}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition-duration:.01ms !important}
 }
-/* ---------- 稽古日誌 ---------- */
-#journalFab{
-  position:fixed;right:16px;bottom:calc(var(--foot-h) + 14px + env(safe-area-inset-bottom));
-  width:54px;height:54px;border-radius:50%;
-  border:1px solid rgba(184,151,79,.55);
-  background:rgba(184,151,79,.20);color:#f3ecd8;
-  font-size:22px;line-height:1;cursor:pointer;z-index:50;
-  display:grid;place-items:center;
-  box-shadow:0 6px 18px rgba(0,0,0,.45);
-  transition:background .18s,border-color .18s,transform .12s;
-}
-#journalFab:hover{background:rgba(184,151,79,.32);border-color:var(--gold)}
-#journalFab:active{transform:scale(.94)}
-#journalFab:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-#journalModal{
+
+/* ---------- 技セクションPDFオーバーレイ ---------- */
+#sectionPdfWrap{
   position:fixed;inset:0;z-index:90;display:none;
-  align-items:center;justify-content:center;padding:20px;
-  background:rgba(6,9,14,.66);
+  background:var(--ink);flex-direction:column;
 }
-#journalModal.open{display:flex}
-.jm-card{
-  width:100%;max-width:440px;max-height:90vh;overflow-y:auto;
-  background:#141b25;border:1px solid rgba(184,151,79,.28);border-radius:6px;
-  padding:22px 22px 18px;box-shadow:var(--shadow);
+#sectionPdfWrap.open{display:flex}
+.spd-bar{
+  flex:none;display:flex;align-items:center;gap:12px;
+  padding:12px 16px;
+  background:linear-gradient(180deg,#10151d,#141b25);
+  border-bottom:1px solid rgba(184,151,79,.25);
 }
-.jm-card h2{font-family:"Noto Serif JP",serif;font-size:16px;letter-spacing:.2em;color:var(--gold);margin-bottom:16px}
-.jm-card label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:14px}
-.jm-card input,.jm-card textarea{
-  display:block;width:100%;margin-top:6px;
-  background:rgba(255,255,255,.05);border:1px solid rgba(184,151,79,.3);border-radius:3px;
-  color:var(--paper);font:inherit;font-size:14px;padding:9px 10px;
+.spd-back{
+  appearance:none;border:1px solid rgba(184,151,79,.4);
+  background:rgba(184,151,79,.14);color:var(--paper);
+  font:inherit;font-size:13px;font-weight:600;
+  padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;
+  transition:background .18s,border-color .18s;
 }
-.jm-card input:focus,.jm-card textarea:focus{outline:none;border-color:var(--gold)}
-.jm-card textarea{resize:vertical;line-height:1.7;min-height:120px}
-.jm-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:4px}
-.jm-save{background:rgba(184,151,79,.22);border-color:var(--gold);color:#fff}
-.jm-save:hover{background:rgba(184,151,79,.34);color:#fff}
-.jm-hint{font-size:11px;color:var(--text-dim);line-height:1.75;margin-top:14px}
-/* ---------- この教本の使い方（アプリ内ガイド） ---------- */
-#tocList .toc-special{border-left-color:var(--gold);background:rgba(184,151,79,.10);color:#f0e6cf;font-weight:500}
-#tocList .toc-special:hover{background:rgba(184,151,79,.18)}
-#tocList .toc-special .badge{margin-left:auto;font-size:16px;line-height:1;color:var(--gold)}
-#guideModal{position:fixed;inset:0;z-index:95;display:none;background:rgba(6,9,14,.75)}
-#guideModal.open{display:block}
-.gd-scroll{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.gd-card{max-width:640px;margin:0 auto;min-height:100%;background:#141b25;border-left:1px solid rgba(184,151,79,.2);border-right:1px solid rgba(184,151,79,.2)}
-.gd-head{position:sticky;top:0;background:linear-gradient(180deg,#10151d,#141b25);border-bottom:1px solid rgba(184,151,79,.25);padding:16px 20px;display:flex;align-items:center;gap:12px;z-index:2}
-.gd-head h2{font-family:"Noto Serif JP",serif;font-size:16px;letter-spacing:.08em;color:var(--gold);flex:1}
-.gd-close{width:36px;height:36px;border-radius:50%;border:1px solid rgba(184,151,79,.4);background:rgba(255,255,255,.04);color:var(--text);font-size:18px;cursor:pointer;flex:none;line-height:1}
-.gd-close:hover{border-color:var(--gold);color:#fff}
-.gd-body{padding:6px 22px 46px}
-.gd-body section{padding:18px 0;border-bottom:1px solid rgba(255,255,255,.08)}
-.gd-body section:last-child{border-bottom:0}
-.gd-body h3{font-family:"Noto Serif JP",serif;font-size:15px;color:var(--paper);display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.gd-body h3 .n{flex:none;width:24px;height:24px;border-radius:50%;background:var(--gold);color:#141b25;font-size:12px;font-weight:700;display:grid;place-items:center;font-family:"Noto Sans JP",sans-serif}
-.gd-body p{font-size:14px;color:var(--text);line-height:1.85;margin:4px 0}
-.gd-body ul,.gd-body ol{list-style:none;margin:6px 0 0}
-.gd-body li{position:relative;padding-left:16px;margin:6px 0;font-size:13.5px;color:#d6d2c7;line-height:1.8}
-.gd-body li::before{content:"";position:absolute;left:2px;top:11px;width:5px;height:5px;border-radius:50%;background:var(--gold)}
-.gd-body ol.steps{counter-reset:s}
-.gd-body ol.steps li{padding-left:30px}
-.gd-body ol.steps li::before{counter-increment:s;content:counter(s);top:1px;left:0;width:20px;height:20px;border-radius:50%;background:rgba(184,151,79,.25);border:1px solid var(--gold);color:#f3ecd8;font-size:11px;font-weight:700;display:grid;place-items:center}
-.gd-key{display:inline-block;border:1px solid rgba(184,151,79,.4);background:rgba(255,255,255,.05);border-radius:5px;padding:0 7px;font-size:12.5px;font-weight:700;color:var(--paper)}
-.gd-tag{display:inline-block;background:rgba(184,151,79,.2);color:#e7d4a3;border-radius:4px;padding:0 7px;font-size:12.5px;font-weight:700}
-.gd-note{background:rgba(184,151,79,.1);border:1px solid rgba(184,151,79,.28);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#cbb98f;margin-top:10px;line-height:1.8}
-.gd-body b{color:var(--paper)}
-/* ---------- 審査科目オーバーレイ（アプリ内表示） ---------- */
-#shinsaWrap{position:fixed;inset:0;z-index:85;display:none;background:#fff}
-#shinsaWrap.open{display:block}
-#shinsaFrame{border:0;width:100%;height:100%;display:block}
-/* 技法へ飛んだあと審査へ戻るボタン */
-#shinsaReturn{
-  position:fixed;left:16px;bottom:calc(var(--foot-h) + 14px + env(safe-area-inset-bottom));
-  z-index:50;display:none;align-items:center;gap:7px;
-  font-family:"Noto Sans JP",sans-serif;font-size:13px;font-weight:700;
-  color:#141b25;background:var(--gold);border:none;border-radius:999px;
-  padding:11px 16px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.45);
+.spd-back:hover{background:rgba(184,151,79,.26);border-color:var(--gold)}
+.spd-title{
+  flex:1;min-width:0;
+  font-family:"Noto Serif JP",serif;font-size:14px;letter-spacing:.06em;
+  color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-#shinsaReturn.show{display:inline-flex}
-#shinsaReturn:hover{background:#d3b877}
+.spd-dl{
+  appearance:none;border:1px solid rgba(184,151,79,.35);
+  background:rgba(255,255,255,.03);color:var(--text);
+  font:inherit;font-size:13px;
+  padding:8px 14px;border-radius:2px;cursor:pointer;white-space:nowrap;
+  text-decoration:none;
+  transition:border-color .18s,background .18s,color .18s;
+}
+.spd-dl:hover{border-color:var(--gold);color:#fff;background:rgba(184,151,79,.12)}
+#spdFrame{flex:1;border:0;width:100%;background:#3a3f47}
+.spd-loading{
+  position:absolute;inset:64px 0 0 0;display:flex;align-items:center;justify-content:center;
+  color:var(--text-dim);font-size:13px;letter-spacing:.1em;pointer-events:none;
+}
+
+/* ---------- トースト通知（スマホでの保存完了通知） ---------- */
+#toast{
+  position:fixed;left:50%;bottom:calc(84px + 18px + env(safe-area-inset-bottom));
+  transform:translateX(-50%) translateY(12px);
+  background:#1c2636;border:1px solid rgba(184,151,79,.4);
+  color:var(--paper);font-size:13px;letter-spacing:.03em;
+  padding:11px 18px;border-radius:999px;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;
+  transition:opacity .25s,transform .25s;
+  z-index:95;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
+
 <header>
   <button class="btn" id="tocBtn" aria-expanded="false">目次</button>
   <div class="brand">教本<small>TEXTBOOK</small>
     <div class="notice">非公開・個人利用に限定する</div>
   </div>
   <div class="spacer"></div>
-  <a class="btn hide-sm" id="dl" href="book.pdf" download>PDFを保存</a>
+  <button class="btn" id="dl">PDFを保存</button>
 </header>
+
 <div id="stage">
   <div id="zoomWrap"><div id="flipbook"></div></div>
 </div>
+
 <footer>
   <button class="nav" id="prev" aria-label="前のページ">‹</button>
   <div class="counter">
@@ -306,109 +268,35 @@ footer{
     <button class="nav" id="zin" aria-label="拡大">＋</button>
   </div>
 </footer>
+
 <div id="scrim"></div>
 <nav id="toc" aria-label="目次">
   <h2>目次</h2>
   <button id="tocClose" aria-label="閉じる">×</button>
   <div id="tocList"></div>
 </nav>
-<button id="journalFab" aria-label="稽古日誌を書く" title="稽古日誌">✎</button>
-<div id="journalModal" role="dialog" aria-modal="true" aria-labelledby="jmTitle">
-  <div class="jm-card">
-    <h2 id="jmTitle">稽古日誌</h2>
-    <label>日付
-      <input type="date" id="jmDate">
-    </label>
-    <label>技（教本の現在ページから自動入力・編集可）
-      <input type="text" id="jmTech" placeholder="技名">
-    </label>
-    <label>道場・場所
-      <input type="text" id="jmPlace" placeholder="例：〇〇道場">
-    </label>
-    <label>内容（先生の指導・気づき・重要だと感じたこと）
-      <textarea id="jmBody" rows="6" placeholder="先生の指導、気づいたこと、重要だと感じたこと…"></textarea>
-    </label>
-    <div class="jm-actions">
-      <button class="btn" id="jmCancel">キャンセル</button>
-      <button class="btn jm-save" id="jmSave">カレンダーに保存</button>
-    </div>
-    <p class="jm-hint">「カレンダーに保存」を押すと Google カレンダーの登録画面が開きます。内容を確認して「保存」してください（日時・場所は後から編集できます）。</p>
+
+<div id="sectionPdfWrap" role="dialog" aria-modal="true" aria-labelledby="spdTitle">
+  <div class="spd-bar">
+    <button class="spd-back" id="spdBack">← 教本へ戻る</button>
+    <div class="spd-title" id="spdTitle"></div>
+    <a class="spd-dl" id="spdDownload" download>ダウンロード</a>
   </div>
+  <iframe id="spdFrame" title="技のPDF"></iframe>
 </div>
-<div id="guideModal" role="dialog" aria-modal="true" aria-labelledby="gdTitle">
-  <div class="gd-scroll">
-    <div class="gd-card">
-      <div class="gd-head">
-        <h2 id="gdTitle">この教本の使い方</h2>
-        <button class="gd-close" id="gdClose" aria-label="閉じる">×</button>
-      </div>
-      <div class="gd-body">
-        <section>
-          <h3><span class="n">1</span>これは何ですか</h3>
-          <p>スマホ・タブレット・パソコンで、合気道技術教本を本のようにめくって読めるアプリです。稽古の記録（稽古日誌）を Google カレンダーに残す機能も付いています。</p>
-        </section>
-        <section>
-          <h3><span class="n">2</span>アプリとして入れる（おすすめ）</h3>
-          <p>ホーム画面に追加すると、アイコンから全画面で開けて、電波がなくてもオフラインで読めます。</p>
-          <ul>
-            <li><b>iPhone / iPad：</b>Safari で開き、共有ボタン <span class="gd-key">□↑</span> →「ホーム画面に追加」</li>
-            <li><b>Android：</b>Chrome で開き、メニュー <span class="gd-key">⋮</span> →「アプリをインストール」または「ホーム画面に追加」</li>
-          </ul>
-          <div class="gd-note">iPhone は仕組み上、Safari からのみ追加できます。追加せずブラウザのまま使うこともできます。</div>
-        </section>
-        <section>
-          <h3><span class="n">3</span>ページのめくり方</h3>
-          <ul>
-            <li><b>横向き</b>にすると<b>見開き（2ページ）</b>、<b>縦向き</b>にすると<b>1ページ</b>で表示されます</li>
-            <li>ページの端を<b>指でめくる</b>、または画面下の <span class="gd-key">‹</span> <span class="gd-key">›</span> で前後に移動</li>
-            <li>パソコンでは <span class="gd-key">←</span> <span class="gd-key">→</span> キーでもめくれます</li>
-          </ul>
-        </section>
-        <section>
-          <h3><span class="n">4</span>目的のページへ飛ぶ</h3>
-          <ul>
-            <li>左上の <span class="gd-tag">目次</span> を押すと章の一覧が出ます。技名を選ぶとそのページへ移動します</li>
-            <li>画面下中央の数字の欄にページ番号を入れて移動することもできます</li>
-          </ul>
-        </section>
-        <section>
-          <h3><span class="n">5</span>拡大・PDF保存</h3>
-          <ul>
-            <li>画面下の <span class="gd-key">＋</span> <span class="gd-key">−</span> で拡大・縮小できます</li>
-            <li>右上の <span class="gd-tag">PDFを保存</span> から教本の PDF をダウンロードできます</li>
-          </ul>
-        </section>
-        <section>
-          <h3><span class="n">6</span>稽古日誌をつける</h3>
-          <p>稽古した技のページを開いた状態で、記録を残せます。</p>
-          <ol class="steps">
-            <li>画面右下の <span class="gd-key">✎</span> ボタンを押します</li>
-            <li>日付（今日）と技名（開いているページから自動で入ります）を確認します</li>
-            <li>道場・場所と、先生の指導・気づき・重要だと感じたことを書きます</li>
-            <li><span class="gd-tag">カレンダーに保存</span> を押すと Google カレンダーの登録画面が開きます</li>
-            <li>内容を確認して「保存」すると、「合気道稽古（技名）」として記録されます</li>
-          </ol>
-          <div class="gd-note">記録は Google カレンダーに残ります。あとでカレンダーを見れば、いつどの技を稽古し、何を教わったか振り返れます。</div>
-        </section>
-        <section>
-          <h3><span class="n">7</span>オフラインでも使えます</h3>
-          <p>一度ひらいて読み込んでおけば、次からは電波がない道場でも教本を閲覧できます。稽古日誌の入力もできます（カレンダーへの保存だけは通信が必要です）。</p>
-        </section>
-      </div>
-    </div>
-  </div>
-</div>
+
+<div id="toast"></div>
+
 <div id="loader">
   <div class="t">読み込み中</div>
   <div id="bar"><i></i></div>
   <div id="pct">0%</div>
   <div id="err"></div>
 </div>
-<!-- 審査科目：アプリ内オーバーレイ（別タブにせず教本の上に重ねて表示） -->
-<div id="shinsaWrap"><iframe id="shinsaFrame" title="審査科目" loading="lazy"></iframe></div>
-<button id="shinsaReturn" aria-label="審査科目にもどる">← 審査科目へ</button>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script>
 /* =========================================================
    設定：ここだけ書き換えれば運用できます
@@ -436,22 +324,19 @@ const CONFIG = {
     { label:'小手返し',            page:84 },
     { label:'呼吸法',              page:90 },
     { label:'英訳付録',            page:96 },
-    // 審査科目：別ページ（shinsa.html）を開くリンク。刷新は shinsa.html を差し替えるだけ
-    { label:'審査科目',            url:'shinsa.html' },
   ]
 };
 /* ========================================================= */
+
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
 const $ = s => document.querySelector(s);
 const loader = $('#loader'), bar = $('#bar i'), pct = $('#pct'), errBox = $('#err');
 document.title = CONFIG.TITLE;
 document.querySelector('.brand').firstChild.textContent = CONFIG.TITLE;
-$('#dl').href = CONFIG.PDF_URL;
 
-let flip = null, pageCount = 0, zoom = 1, baseW = 0, baseH = 0;
-let images = [], pdfRatio = 1;          // 描画済み画像は一度だけ生成してキャッシュ
-let curOrientation = null, lastW = 0, lastH = 0;
+let flip = null, pageCount = 0, zoom = 1, baseW = 0, baseH = 0, pdfBytes = null, sectionPdfUrl = null;
 
 function fail(msg){
   errBox.style.display = 'block';
@@ -460,36 +345,37 @@ function fail(msg){
   pct.style.display = 'none';
 }
 
-/* 画面の「向き」を判定：縦向き=true（単ページ） / 横向き=false（見開き）
-   ・matchMedia の orientation を第一基準にし、非対応環境では縦横比でフォールバック */
-function isPortrait(){
-  if(window.matchMedia){
-    const mq = window.matchMedia('(orientation: portrait)');
-    if(typeof mq.matches === 'boolean') return mq.matches;
-  }
-  return window.innerHeight >= window.innerWidth;
-}
-
 async function boot(){
   let pdf;
   try{
-    pdf = await pdfjsLib.getDocument(CONFIG.PDF_URL).promise;
+    const res = await fetch(CONFIG.PDF_URL);
+    if(!res.ok) throw new Error('fetch failed: ' + res.status);
+    pdfBytes = await res.arrayBuffer();
+    pdf = await pdfjsLib.getDocument({data: pdfBytes.slice(0)}).promise;
   }catch(e){
     fail('PDFを読み込めませんでした。<br>' +
          '<code>' + CONFIG.PDF_URL + '</code> がこのHTMLと同じ場所にあるか確認してください。');
     return;
   }
+
   pageCount = pdf.numPages;
   $('#total').textContent = '/ ' + pageCount;
   $('#pageInput').max = pageCount;
 
-  // 1ページ目のサイズから基準比率を取得
+  // 1ページ目のサイズから見開きの基準寸法を決める
   const first = await pdf.getPage(1);
   const vp0 = first.getViewport({scale:1});
-  pdfRatio = vp0.height / vp0.width;
+  const ratio = vp0.height / vp0.width;
 
-  // 全ページを画像化（重い処理なので起動時に一度だけ実行してキャッシュ）
-  images = [];
+  const stage = $('#stage');
+  const portrait = window.innerWidth < 900;
+  const availH = stage.clientHeight - 24;
+  const availW = stage.clientWidth - 24;
+  baseH = Math.min(availH, (portrait ? availW : availW/2) * ratio);
+  baseW = baseH / ratio;
+
+  // 全ページを画像化
+  const images = [];
   for(let i=1;i<=pageCount;i++){
     const page = await pdf.getPage(i);
     const vp = page.getViewport({scale: CONFIG.RENDER_SCALE});
@@ -501,68 +387,26 @@ async function boot(){
     bar.style.width = p + '%'; pct.textContent = p + '%';
   }
 
-  build();          // 現在の向きに合わせてフリップブックを構築
-  buildTOC();
-  syncNav();
-  loader.classList.add('done');
-
-  // 審査科目ページから直接開かれた場合（#p=ページ番号）は該当ページへ
-  const hp = (location.hash || '').match(/p=(\d+)/);
-  if(hp){ goto(parseInt(hp[1], 10)); }
-}
-
-/* 向きに応じてフリップブックを（再）構築する。
-   回転・リサイズ時は現在ページを保ったまま作り直す（画像は再生成しない＝速い） */
-function build(){
-  if(!images.length) return;
-  const stage = $('#stage');
-  const portrait = isPortrait();
-  const availH = stage.clientHeight - 10;
-  const availW = stage.clientWidth - 10;
-  // 縦向き=1ページ分の幅 / 横向き=見開きなので半分の幅を1ページに割り当てる
-  baseH = Math.min(availH, (portrait ? availW : availW/2) * pdfRatio);
-  baseW = baseH / pdfRatio;
-
-  const keep = flip ? flip.getCurrentPageIndex() : 0;
-  if(flip){ try{ flip.destroy(); }catch(e){} flip = null; }
-  // ※ page-flip の destroy() は #flipbook 要素自体をDOMから取り除くため、
-  //    毎回 #zoomWrap の中に空の #flipbook を作り直してから生成する
-  let fb = document.getElementById('flipbook');
-  if(!fb){
-    fb = document.createElement('div');
-    fb.id = 'flipbook';
-    $('#zoomWrap').appendChild(fb);
-  }else{
-    fb.innerHTML = '';
-  }
-
-  flip = new St.PageFlip(fb, {
+  flip = new St.PageFlip($('#flipbook'), {
     width: Math.round(baseW),
     height: Math.round(baseH),
     size: 'fixed',
     showCover: true,
-    usePortrait: portrait,   // 縦向き=単ページ / 横向き=見開き
+    usePortrait: portrait,
     maxShadowOpacity: 0.5,
     mobileScrollSupport: false,
     flippingTime: 700
   });
   flip.loadFromImages(images);
+
   flip.on('flip', e => {
     $('#pageInput').value = e.data + 1;
     syncNav();
   });
 
-  // 直前のページ位置を復元
-  if(keep > 0){
-    try{ flip.turnToPage(keep); }catch(e){}
-  }
-  const cur = (typeof flip.getCurrentPageIndex === 'function') ? flip.getCurrentPageIndex() : keep;
-  $('#pageInput').value = cur + 1;
-
-  curOrientation = portrait ? 'p' : 'l';
-  lastW = stage.clientWidth;
-  lastH = stage.clientHeight;
+  buildTOC();
   syncNav();
+  loader.classList.add('done');
 }
 
 function syncNav(){
@@ -570,20 +414,16 @@ function syncNav(){
   $('#prev').disabled = i <= 0;
   $('#next').disabled = i >= pageCount - 1;
 }
+
 function goto(n){
   const idx = Math.max(0, Math.min(pageCount-1, n-1));
   flip.flip(idx);
   $('#pageInput').value = idx + 1;
 }
+
 /* ---- 目次 ---- */
 function buildTOC(){
   const list = $('#tocList');
-  // 目次の先頭に「この教本の使い方」を追加（アプリ内ガイドを開く）
-  const guideItem = document.createElement('button');
-  guideItem.className = 'toc-special';
-  guideItem.innerHTML = '<span>この教本の使い方</span><span class="badge">?</span>';
-  guideItem.onclick = () => { closeTOC(); openGuide(); };
-  list.appendChild(guideItem);
   if(!CONFIG.TOC.length){
     list.innerHTML = '<p style="padding:16px 24px;font-size:13px;line-height:2;color:#9aa3ae">' +
       '目次は <code>CONFIG.TOC</code> に章タイトルとページ番号を書くと表示されます。</p>';
@@ -591,46 +431,14 @@ function buildTOC(){
   }
   CONFIG.TOC.forEach(item => {
     const b = document.createElement('button');
-    if(item.url){
-      // URL項目：別タブにせず、教本アプリ内にオーバーレイ表示（PWAでも戻れる）
-      b.innerHTML = '<span>' + item.label + '</span><span class="p">開く</span>';
-      b.onclick = () => { closeTOC(); openShinsa(item.url); };
-    }else{
-      b.innerHTML = '<span>' + item.label + '</span><span class="p">' + item.page + '</span>';
-      b.onclick = () => { goto(item.page); closeTOC(); };
-    }
+    b.innerHTML = '<span>' + item.label + '</span><span class="p">' + item.page + '</span>';
+    b.onclick = () => { goto(item.page); closeTOC(); };
     list.appendChild(b);
   });
 }
-function openGuide(){ const m=$('#guideModal'); m.classList.add('open'); m.querySelector('.gd-scroll').scrollTop=0; }
-function closeGuide(){ $('#guideModal').classList.remove('open'); }
 function openTOC(){ $('#toc').classList.add('open'); $('#scrim').classList.add('on'); $('#tocBtn').setAttribute('aria-expanded','true'); }
 function closeTOC(){ $('#toc').classList.remove('open'); $('#scrim').classList.remove('on'); $('#tocBtn').setAttribute('aria-expanded','false'); }
-/* ---- 審査科目オーバーレイ ---- */
-function openShinsa(url){
-  const wrap = $('#shinsaWrap'), fr = $('#shinsaFrame');
-  if(fr.getAttribute('data-src') !== url){ fr.src = url; fr.setAttribute('data-src', url); }
-  wrap.classList.add('open');
-  hideShinsaReturn();
-}
-function closeShinsa(){ $('#shinsaWrap').classList.remove('open'); }
-function showShinsaReturn(){ $('#shinsaReturn').classList.add('show'); }
-function hideShinsaReturn(){ $('#shinsaReturn').classList.remove('show'); }
-// 「審査科目へ」：閉じてある審査オーバーレイを再表示（見ていた位置は保持）
-$('#shinsaReturn').onclick = () => {
-  const url = $('#shinsaFrame').getAttribute('data-src') || 'shinsa.html';
-  openShinsa(url);
-};
-// 審査科目ページ（iframe内）からの通知：もどる／教本の該当ページへジャンプ
-window.addEventListener('message', e => {
-  if(!e || e.data == null) return;
-  if(e.data === 'closeShinsa'){ closeShinsa(); hideShinsaReturn(); return; }   // 「教本にもどる」＝審査終了
-  if(e.data.type === 'gotoPage' && typeof e.data.page === 'number'){
-    closeShinsa();
-    goto(e.data.page);
-    showShinsaReturn();   // 技法へ飛んだので「審査科目へ」ボタンを表示
-  }
-});
+
 /* ---- 拡大縮小 ---- */
 function setZoom(z){
   zoom = Math.max(0.6, Math.min(2.6, +z.toFixed(2)));
@@ -638,6 +446,95 @@ function setZoom(z){
   $('#zlvl').textContent = Math.round(zoom*100) + '%';
   $('#stage').style.overflow = zoom > 1 ? 'auto' : 'hidden';
 }
+
+/* ---- 技セクションPDF（現在ページが属する章だけを抜き出す） ---- */
+function currentSectionRange(){
+  const cur = (flip ? flip.getCurrentPageIndex() : 0) + 1; // 1始まりの現在ページ
+  const toc = CONFIG.TOC.filter(t => !t.url).slice().sort((a,b) => a.page - b.page);
+  let start = 1, end = pageCount, label = CONFIG.TITLE;
+  for(let i = 0; i < toc.length; i++){
+    if(toc[i].page <= cur){
+      start = toc[i].page;
+      label = toc[i].label;
+      end = (i + 1 < toc.length) ? (toc[i + 1].page - 1) : pageCount;
+    }else break;
+  }
+  return {start, end, label};
+}
+
+function isStandaloneOrTouch(){
+  const standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+                      || window.navigator.standalone === true; // iOS home screen
+  const coarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  return standalone || coarsePointer;
+}
+
+function triggerDownload(url, filename){
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function showToast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+async function saveSectionPdf(){
+  if(!pdfBytes){ return; }
+  const dlBtn = $('#dl');
+  const originalText = dlBtn.textContent;
+  dlBtn.textContent = '作成中…';
+  dlBtn.disabled = true;
+  try{
+    const {start, end, label} = currentSectionRange();
+    const srcDoc = await PDFLib.PDFDocument.load(pdfBytes);
+    const newDoc = await PDFLib.PDFDocument.create();
+    const indices = [];
+    for(let p = start; p <= end; p++) indices.push(p - 1);
+    const copied = await newDoc.copyPages(srcDoc, indices);
+    copied.forEach(pg => newDoc.addPage(pg));
+    const newBytes = await newDoc.save();
+    const blob = new Blob([newBytes], {type: 'application/pdf'});
+    if(sectionPdfUrl) URL.revokeObjectURL(sectionPdfUrl);
+    sectionPdfUrl = URL.createObjectURL(blob);
+
+    const pageLabel = (start === end) ? ('p.' + start) : ('p.' + start + '〜' + end);
+    const fileLabel = label.replace(/[\\\/:*?"<>|]/g, '');
+
+    if(isStandaloneOrTouch()){
+      // スマホ・タブレット（特にホーム画面追加時）はその場で保存し、画面はそのまま
+      triggerDownload(sectionPdfUrl, fileLabel + '.pdf');
+      showToast(label + '（' + pageLabel + '）を保存しました');
+    }else{
+      // PCはプレビュー表示＋戻るボタン
+      $('#spdTitle').textContent = label + '（' + pageLabel + '）';
+      $('#spdFrame').src = sectionPdfUrl;
+      $('#spdDownload').href = sectionPdfUrl;
+      $('#spdDownload').download = fileLabel + '.pdf';
+      openSectionPdf();
+    }
+  }catch(e){
+    fail('この技のPDFを作成できませんでした。<br>もう一度お試しください。');
+    loader.classList.remove('done');
+    setTimeout(() => { loader.classList.add('done'); errBox.style.display = 'none'; }, 2500);
+  }finally{
+    dlBtn.textContent = originalText;
+    dlBtn.disabled = false;
+  }
+}
+function openSectionPdf(){ $('#sectionPdfWrap').classList.add('open'); }
+function closeSectionPdf(){
+  $('#sectionPdfWrap').classList.remove('open');
+  $('#spdFrame').src = 'about:blank';
+}
+
 /* ---- 操作 ---- */
 $('#prev').onclick = () => flip && flip.flipPrev();
 $('#next').onclick = () => flip && flip.flipNext();
@@ -646,26 +543,18 @@ $('#zout').onclick = () => setZoom(zoom - 0.2);
 $('#tocBtn').onclick = openTOC;
 $('#tocClose').onclick = closeTOC;
 $('#scrim').onclick = closeTOC;
-$('#gdClose').onclick = closeGuide;
+$('#dl').onclick = saveSectionPdf;
+$('#spdBack').onclick = closeSectionPdf;
+
 $('#pageInput').addEventListener('change', e => goto(parseInt(e.target.value,10) || 1));
 $('#pageInput').addEventListener('keydown', e => { if(e.key === 'Enter') e.target.blur(); });
+
 document.addEventListener('keydown', e => {
-  // 審査科目オーバーレイが開いているときは Esc で閉じるだけ
-  if($('#shinsaWrap').classList.contains('open')){
-    if(e.key === 'Escape') closeShinsa();
+  if($('#sectionPdfWrap').classList.contains('open')){
+    if(e.key === 'Escape') closeSectionPdf();
     return;
   }
-  // 使い方ガイドが開いているときは Esc で閉じるだけ
-  if($('#guideModal').classList.contains('open')){
-    if(e.key === 'Escape') closeGuide();
-    return;
-  }
-  // 稽古日誌が開いているときはページ送り等を無効化し、Escで閉じるだけにする
-  if($('#journalModal').classList.contains('open')){
-    if(e.key === 'Escape') closeJournal();
-    return;
-  }
-  if(/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
+  if(document.activeElement.tagName === 'INPUT') return;
   if(e.key === 'ArrowLeft')  flip && flip.flipPrev();
   if(e.key === 'ArrowRight') flip && flip.flipNext();
   if(e.key === 'Escape')     closeTOC();
@@ -673,105 +562,13 @@ document.addEventListener('keydown', e => {
   if(e.key === '-')                  setZoom(zoom - 0.2);
 });
 
-/* ---- 回転・リサイズ対応 ----
-   向きが変わったとき、または表示サイズが大きく変わったときだけ組み直す。
-   （モバイルのアドレスバー開閉などの小さな変化では再構築しない） */
-function relayoutIfNeeded(){
-  if(!flip) return;
-  const stage = $('#stage');
-  const orient = isPortrait() ? 'p' : 'l';
-  const dw = Math.abs(stage.clientWidth - lastW);
-  const dh = Math.abs(stage.clientHeight - lastH);
-  if(orient !== curOrientation || dw > 40 || dh > 40){
-    build();
-  }
-}
 let rt;
 window.addEventListener('resize', () => {
   clearTimeout(rt);
-  rt = setTimeout(relayoutIfNeeded, 300);
-});
-// orientation の変化は matchMedia でも確実に拾う
-if(window.matchMedia){
-  const omq = window.matchMedia('(orientation: portrait)');
-  const onOrient = () => { clearTimeout(rt); rt = setTimeout(relayoutIfNeeded, 250); };
-  if(omq.addEventListener) omq.addEventListener('change', onOrient);
-  else if(omq.addListener) omq.addListener(onOrient); // 古い端末向けフォールバック
-}
-
-/* ---- 稽古日誌 → Google カレンダー（簡易版：登録画面を開く方式） ---- */
-let journalPage = 1;
-// 現在開いているPDFページ番号（1始まり）
-function currentPdfPage(){
-  return (flip ? flip.getCurrentPageIndex() : 0) + 1;
-}
-// そのページに該当する技を目次から判定（page が現在ページ以下で最大のもの）
-function techForPage(p){
-  let best = null;
-  for(const it of CONFIG.TOC){
-    if(it.page <= p && (!best || it.page > best.page)) best = it;
-  }
-  return best; // {label,page} または null
-}
-function openJournal(){
-  journalPage = currentPdfPage();
-  const t = techForPage(journalPage);
-  const now = new Date();
-  const iso = now.getFullYear() + '-' +
-              String(now.getMonth()+1).padStart(2,'0') + '-' +
-              String(now.getDate()).padStart(2,'0');
-  $('#jmDate').value = iso;
-  $('#jmTech').value = t ? t.label : '';
-  $('#jmBody').value = '';
-  // 道場・場所は前回入力を引き継ぐ（未入力ならそのまま空）
-  $('#journalModal').classList.add('open');
-  setTimeout(() => $('#jmBody').focus(), 60);
-}
-function closeJournal(){ $('#journalModal').classList.remove('open'); }
-function saveJournal(){
-  const date = $('#jmDate').value;
-  if(!date){ $('#jmDate').focus(); return; }
-  const tech = $('#jmTech').value.trim();
-  const place = $('#jmPlace').value.trim();
-  const body = $('#jmBody').value.trim();
-
-  // 終日予定：終了日は翌日（Googleは終了日を含めないため）
-  const d1 = date.replace(/-/g,'');
-  const dt = new Date(date + 'T00:00:00');
-  dt.setDate(dt.getDate() + 1);
-  const d2 = dt.getFullYear() +
-             String(dt.getMonth()+1).padStart(2,'0') +
-             String(dt.getDate()).padStart(2,'0');
-
-  const title = tech ? ('合気道稽古（' + tech + '）') : '合気道稽古';
-  const ref = tech ? ('技：' + tech + '（教本 p.' + journalPage + '）')
-                   : ('教本 p.' + journalPage);
-  const details = body ? (body + '\n\n──────\n' + ref) : ref;
-
-  let url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-            '&text='    + encodeURIComponent(title) +
-            '&dates='   + d1 + '/' + d2 +
-            '&details=' + encodeURIComponent(details);
-  if(place) url += '&location=' + encodeURIComponent(place);
-
-  window.open(url, '_blank', 'noopener');
-  closeJournal();
-}
-$('#journalFab').onclick = openJournal;
-$('#jmCancel').onclick   = closeJournal;
-$('#jmSave').onclick     = saveJournal;
-$('#journalModal').addEventListener('click', e => {
-  if(e.target.id === 'journalModal') closeJournal(); // 背景クリックで閉じる
+  rt = setTimeout(() => location.reload(), 400);
 });
 
 boot();
-
-/* ---- PWA: Service Worker 登録（オフライン対応・ホーム画面追加） ---- */
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  });
-}
 </script>
 </body>
 </html>
