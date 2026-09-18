@@ -536,6 +536,7 @@ document.querySelector('.brand').firstChild.textContent = CONFIG.TITLE;
 $('#dl').href = CONFIG.PDF_URL;
 
 let flip = null, pageCount = 0, zoom = 1, baseW = 0, baseH = 0;
+let bootedOnce = false;
 let images = [], pdfRatio = 1;          // 描画済み画像は一度だけ生成してキャッシュ
 let curOrientation = null, lastW = 0, lastH = 0;
 
@@ -598,13 +599,28 @@ async function boot(){
 }
 
 /* 向きに応じてフリップブックを（再）構築する。
-   回転・リサイズ時は現在ページを保ったまま作り直す（画像は再生成しない＝速い） */
-function build(){
+   回転・リサイズ時は現在ページを保ったまま作り直す（画像は再生成しない＝速い）。
+   回転直後は一時的にステージの寸法が正しく取得できないことがあるため、
+   異常な寸法のときは少し待って測り直す。また、拡大縮小率は新しいレイアウトに
+   合わないため、組み直すたびに100%に戻す。 */
+let buildRetries = 0;
+function build(isRetry){
   if(!images.length) return;
+  if(!isRetry) buildRetries = 0;
   const stage = $('#stage');
   const portrait = isPortrait();
   const availH = stage.clientHeight - 10;
   const availW = stage.clientWidth - 10;
+
+  // 回転直後などで寸法がまだ確定していない場合は、少し待って測り直す
+  if(availH <= 20 || availW <= 20){
+    if(buildRetries < 10){
+      buildRetries++;
+      setTimeout(() => build(true), 120);
+    }
+    return;
+  }
+
   // 縦向き=1ページ分の幅 / 横向き=見開きなので半分の幅を1ページに割り当てる
   baseH = Math.min(availH, (portrait ? availW : availW/2) * pdfRatio);
   baseW = baseH / pdfRatio;
@@ -622,33 +638,47 @@ function build(){
     fb.innerHTML = '';
   }
 
-  flip = new St.PageFlip(fb, {
-    width: Math.round(baseW),
-    height: Math.round(baseH),
-    size: 'fixed',
-    showCover: true,
-    usePortrait: portrait,   // 縦向き=単ページ / 横向き=見開き
-    maxShadowOpacity: 0.5,
-    mobileScrollSupport: false,
-    flippingTime: 700
-  });
-  flip.loadFromImages(images);
-  flip.on('flip', e => {
-    $('#pageInput').value = e.data + 1;
-    syncNav();
-  });
+  try{
+    flip = new St.PageFlip(fb, {
+      width: Math.round(baseW),
+      height: Math.round(baseH),
+      size: 'fixed',
+      showCover: true,
+      usePortrait: portrait,   // 縦向き=単ページ / 横向き=見開き
+      maxShadowOpacity: 0.5,
+      mobileScrollSupport: false,
+      flippingTime: 700
+    });
+    flip.loadFromImages(images);
+    flip.on('flip', e => {
+      $('#pageInput').value = e.data + 1;
+      syncNav();
+    });
 
-  // 直前のページ位置を復元
-  if(keep > 0){
-    try{ flip.turnToPage(keep); }catch(e){}
+    // 直前のページ位置を復元
+    if(keep > 0){
+      try{ flip.turnToPage(keep); }catch(e){}
+    }
+    const cur = (typeof flip.getCurrentPageIndex === 'function') ? flip.getCurrentPageIndex() : keep;
+    $('#pageInput').value = cur + 1;
+  }catch(err){
+    // 構築に失敗した場合、flip を null のまま放置すると以後ずっと再構築されなく
+    // なってしまうため、少し待って自動的にもう一度試す
+    console.error('flipbook構築に失敗、再試行します', err);
+    flip = null;
+    if(buildRetries < 10){
+      buildRetries++;
+      setTimeout(() => build(true), 200);
+    }
+    return;
   }
-  const cur = (typeof flip.getCurrentPageIndex === 'function') ? flip.getCurrentPageIndex() : keep;
-  $('#pageInput').value = cur + 1;
 
   curOrientation = portrait ? 'p' : 'l';
   lastW = stage.clientWidth;
   lastH = stage.clientHeight;
+  setZoom(1); // 新しいレイアウトに合わせて拡大率をリセット
   syncNav();
+  bootedOnce = true;
 }
 
 function syncNav(){
@@ -768,7 +798,7 @@ document.addEventListener('keydown', e => {
    向きが変わったとき、または表示サイズが大きく変わったときだけ組み直す。
    （モバイルのアドレスバー開閉などの小さな変化では再構築しない） */
 function relayoutIfNeeded(){
-  if(!flip) return;
+  if(!bootedOnce) return;
   const stage = $('#stage');
   const orient = isPortrait() ? 'p' : 'l';
   const dw = Math.abs(stage.clientWidth - lastW);
