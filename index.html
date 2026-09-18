@@ -810,11 +810,25 @@ function isTouchDevice(){
   return ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
 }
 let pdfExportUrl = null;
-function openPdfExportOverlay(){ $('#pdfExportOverlay').classList.add('open'); }
+
+/* PDFプレビュー表示中だけピンチズームを許可する（教本ビューア自体は独自の
+   ＋／−ズームがあるため、通常時は user-scalable=no で固定している） */
+const VIEWPORT_DEFAULT = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
+const VIEWPORT_ZOOMABLE = 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover';
+function setViewportZoomable(zoomable){
+  const vp = document.querySelector('meta[name="viewport"]');
+  if(vp) vp.setAttribute('content', zoomable ? VIEWPORT_ZOOMABLE : VIEWPORT_DEFAULT);
+}
+
+function openPdfExportOverlay(){
+  $('#pdfExportOverlay').classList.add('open');
+  setViewportZoomable(true);
+}
 function closePdfExportOverlay(){
   $('#pdfExportOverlay').classList.remove('open');
   $('#peoFrame').src = 'about:blank';
   if(pdfExportUrl){ URL.revokeObjectURL(pdfExportUrl); pdfExportUrl = null; }
+  setViewportZoomable(false);
 }
 let toastTimer;
 function showToast(msg){
