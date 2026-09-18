@@ -932,12 +932,46 @@ $('#journalModal').addEventListener('click', e => {
 
 boot();
 
-/* ---- PWA: Service Worker 登録（オフライン対応・ホーム画面追加） ---- */
+/* ---- PWA: Service Worker 登録（オフライン対応・ホーム画面追加） ----
+   新しいバージョンの sw.js が有効化されたら、開いたままのタブを一度だけ
+   自動リロードする（サイト更新時に、古いJSのまま動き続けるのを防ぐ）。
+   ただし「まだ何のSWにも制御されていない状態からの、最初の制御開始」は
+   実際の更新ではないので、その1回目だけは無視する。 */
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
+    let ignoreFirst = !navigator.serviceWorker.controller;
+    let swRefreshed = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if(ignoreFirst){ ignoreFirst = false; return; }
+      if(swRefreshed) return;
+      swRefreshed = true;
+      location.reload();
+    });
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
 }
+
+/* ---- 長時間ぶりに開いたときの自動リロード ----
+   iOSの大型アップデート（OS再起動）などをまたいでホーム画面アプリを開くと、
+   古い実行状態のまま復帰してタッチ操作が効かなくなることがある。
+   一定時間（3時間）以上ぶりに開いた場合は、念のため読み込み直してから使う。 */
+(function(){
+  const KEY = 'kyohonLastActive';
+  const THRESHOLD_MS = 3 * 60 * 60 * 1000; // 3時間
+  function markActive(){
+    try{ localStorage.setItem(KEY, String(Date.now())); }catch(e){}
+  }
+  window.addEventListener('pageshow', () => {
+    let last = null;
+    try{ last = parseInt(localStorage.getItem(KEY), 10); }catch(e){}
+    const stale = last && !isNaN(last) && (Date.now() - last > THRESHOLD_MS);
+    markActive();
+    if(stale) location.reload();
+  });
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'hidden') markActive();
+  });
+})();
 </script>
 </body>
 </html>

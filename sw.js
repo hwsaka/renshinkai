@@ -4,7 +4,7 @@
      オフライン時のみキャッシュから表示（＝サイト更新が開くたびに反映される）。
    ・その他（CDNのライブラリ・フォント・PDF・アイコン等）はキャッシュ優先＋裏で更新。
    ※ CORE（アイコンやPDF等）を差し替えたときは VERSION を上げると全員のキャッシュが更新されます。 */
-const VERSION = 'kyohon-v4';
+const VERSION = 'kyohon-v5';
 const CORE = [
   './',
   './index.html',
